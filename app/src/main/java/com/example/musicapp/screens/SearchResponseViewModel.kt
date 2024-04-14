@@ -31,7 +31,7 @@ class SearchResponseViewModel(application: Application) : AndroidViewModel(appli
                     .subscribe(
                         { response ->
                             Log.d("ABOBA", "Data received: ${response}")
-                            tracks.value = response?.results?.trackmatches?.tracks ?: emptyList()
+                            tracks.value = response?.results?.trackmatches?.track ?: emptyList()
                         },
                         { error ->
                             Log.e("ABOBA", "Error: ${error.message}")

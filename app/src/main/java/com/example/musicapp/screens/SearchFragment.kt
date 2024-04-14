@@ -1,27 +1,25 @@
 package com.example.musicapp.screens
 
+import android.R
 import android.app.Activity
+import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.example.musicapp.LastFmApp
-import com.example.musicapp.R
 import com.example.musicapp.TrackAdapter
-import com.example.musicapp.data.remote.common.TrackItem
 import com.example.musicapp.databinding.FragmentSearchBinding
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import java.util.concurrent.TimeUnit
 
 
@@ -42,7 +40,8 @@ class SearchFragment : Fragment() {
         val searchViewModel = ViewModelProvider(this).get(SearchResponseViewModel::class.java)
         val lastFmApp = activity?.application as LastFmApp
         val lastFmApi = lastFmApp.lastFmApi
-
+        val spacingInPixels = 10
+        binding.recyclerView.addItemDecoration(VerticalSpaceItemDecoration(spacingInPixels))
         // Создаем Observable из изменений текста в EditText
         val textChangesObservable = Observable.create<String> { emitter ->
             binding.editText.addTextChangedListener(object : TextWatcher {
@@ -99,4 +98,17 @@ class SearchFragment : Fragment() {
         imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 
+}
+
+
+class VerticalSpaceItemDecoration(private val verticalSpaceHeight: Int) : ItemDecoration() {
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
+        outRect.top = verticalSpaceHeight
+        outRect.bottom = verticalSpaceHeight
+    }
 }

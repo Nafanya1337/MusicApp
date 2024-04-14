@@ -11,5 +11,5 @@ data class Results(
 )
 
 data class TrackMatches(
-    val tracks: List<TrackItem>
+    val track: List<TrackItem>
 )
