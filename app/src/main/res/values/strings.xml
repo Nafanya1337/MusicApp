@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">MusicApp</string>
+    <string name="vibes_text">Vibes</string>
+    <string name="tracked_artists_header">Your tracked artists</string>
+    <string name="charts_header">Charts</string>
+    <string name="recommendations_header">You might like it</string>
+    <string name="search_history_header">Search history</string>
+    <string name="my_library_header">My library</string>
+    <string-array name="genres">
+        <item>Freshmen</item>
+        <item>Rock</item>
+        <item>Rap</item>
+        <item>Jazz</item>
+        <item>Ambient</item>
+    </string-array>
+
+    <string name="search_history_text">Search history</string>
+    <string name="search_text">Search</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="clear_all_text">Clear all</string>
+</resources>
