@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,15 +18,19 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.example.musicapp.LastFmApp
 import com.example.musicapp.TrackAdapter
+import com.example.musicapp.data.remote.common.TrackItem
 import com.example.musicapp.databinding.FragmentSearchBinding
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import java.util.concurrent.TimeUnit
 
 
 class SearchFragment : Fragment() {
 
     private lateinit var binding: FragmentSearchBinding
+
+    private val compositeDisposable = CompositeDisposable()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -44,20 +49,13 @@ class SearchFragment : Fragment() {
         binding.recyclerView.addItemDecoration(VerticalSpaceItemDecoration(spacingInPixels))
         // Создаем Observable из изменений текста в EditText
         val textChangesObservable = Observable.create<String> { emitter ->
-            binding.editText.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                    // Отправляем измененный текст в Observable
-                    emitter.onNext(s?.toString() ?: "")
-                }
-                override fun afterTextChanged(s: Editable?) {}
-            })
+            binding.editText.addTextChangedListener { s -> emitter.onNext(s?.toString() ?: "") }
         }
 
         // Добавляем задержку с помощью оператора debounce
-        textChangesObservable
-            .debounce(5000, TimeUnit.MILLISECONDS) // Задержка в 5 секунд
+        val disposable = textChangesObservable
             .observeOn(AndroidSchedulers.mainThread())
+            .debounce(1000, TimeUnit.MILLISECONDS) // Задержка в 5 секунд
             .subscribe { text ->
                 // Приемник обработанных данных
                 if (text.isNotEmpty()) {
@@ -65,22 +63,38 @@ class SearchFragment : Fragment() {
                 }
             }
 
-        // Настраиваем RecyclerView
-        val recyclerView: RecyclerView = binding.recyclerView
-        val layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.layoutManager = layoutManager
+        compositeDisposable.add(disposable)
 
-// Создаем адаптер
-        val adapter = TrackAdapter(emptyList()) // Передаем пустой список, так как данные будут заполняться позже
-        recyclerView.adapter = adapter
 
-        searchViewModel.tracks.observe(viewLifecycleOwner) { tracks ->
-            adapter.tracks = tracks ?: emptyList()
-            adapter.notifyDataSetChanged()
+        binding.recyclerView.adapter = TrackAdapter(emptyList())
+
+        binding.noInternet.button.setOnClickListener {
+            searchViewModel.searchTrack(lastFmApi, binding.editText.text?.toString() ?: "")
         }
 
-// Запускаем поиск треков при создании фрагмента, если есть сохраненные данные
-        searchViewModel.searchTrack(lastFmApi, "")
+        searchViewModel.success.observe(viewLifecycleOwner) { success ->
+            if (!success) {
+                binding.recyclerView.visibility = View.GONE
+                binding.noInternet.root.visibility = View.VISIBLE
+            } else {
+                binding.recyclerView.visibility = View.VISIBLE
+                binding.noInternet.root.visibility = View.GONE
+            }
+
+        }
+
+        searchViewModel.tracks.observe(viewLifecycleOwner) { tracks ->
+            ((binding.recyclerView.adapter) as TrackAdapter).tracks = if (tracks.isEmpty()) {
+                binding.recyclerView.visibility = View.GONE
+                binding.noSearchResults.root.visibility = View.VISIBLE
+                emptyList()
+            } else {
+                binding.recyclerView.visibility = View.VISIBLE
+                binding.noSearchResults.root.visibility = View.GONE
+                tracks
+            }
+            ((binding.recyclerView.adapter) as TrackAdapter).notifyDataSetChanged()
+        }
 
         binding.closeIcon.setOnClickListener {
             hideKeyboard()
@@ -89,13 +103,17 @@ class SearchFragment : Fragment() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        compositeDisposable.dispose()
+    }
+
     private fun hideKeyboard() {
-        val imm = requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm =
+            requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as? InputMethodManager
         var view = requireActivity().currentFocus
-        if (view == null) {
-            view = View(activity)
-        }
-        imm.hideSoftInputFromWindow(view.windowToken, 0)
+        view?.let { View(activity) }
+        imm?.let { imm -> imm.hideSoftInputFromWindow(view?.windowToken, 0) }
     }
 
 }
