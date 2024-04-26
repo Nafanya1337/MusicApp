@@ -3,6 +3,7 @@ package com.example.musicapp.screens
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.musicapp.data.remote.common.TrackItem
 import com.example.musicapp.data.remote.lastfm.LastFmApi
@@ -14,9 +15,22 @@ import io.reactivex.schedulers.Schedulers
 
 class SearchResponseViewModel(application: Application) : AndroidViewModel(application) {
 
+    enum class StatusClass {
+        SUCCESS,
+        INTERNET_FAIL,
+        NO_TRACKS_FAIL,
+        NO_SEARCH
+    }
+
     private val compositeDisposable = CompositeDisposable()
-    val success: MutableLiveData<Boolean> = MutableLiveData()
-    val tracks: MutableLiveData<List<TrackItem>> = MutableLiveData()
+    private val _tracks: MutableLiveData<List<TrackItem>> = MutableLiveData(emptyList())
+    private val _status: MutableLiveData<StatusClass> = MutableLiveData(StatusClass.NO_SEARCH)
+
+    public val status: LiveData<StatusClass>
+        get() = _status
+
+    public val tracks: LiveData<List<TrackItem>>
+        get() = _tracks
 
     override fun onCleared() {
         compositeDisposable.dispose()
@@ -31,17 +45,26 @@ class SearchResponseViewModel(application: Application) : AndroidViewModel(appli
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(
                         { response ->
-                            success.value = true
-                            Log.d("ABOBA", "Data received: ${response}")
-                            tracks.value = response?.results?.trackmatches?.track ?: emptyList()
+                            _status.value =
+                                if (response.results.trackmatches.track != emptyList<TrackItem>()) {
+                                    StatusClass.SUCCESS
+                                } else {
+                                    StatusClass.NO_TRACKS_FAIL
+                                }
+                            _tracks.value = response.results.trackmatches.track
                         },
                         { error ->
-                            success.value = false
-                            Log.e("ABOBA", "Error: ${error.message}")
+                            _status.value = StatusClass.INTERNET_FAIL
+                            _tracks.value = emptyList()
                         }
                     )
             )
-        } ?: Log.e("ABOBA", "lastFmApi is null")
+        }
+    }
+
+    fun clear() {
+        _status.value = StatusClass.NO_SEARCH
+        _tracks.value = emptyList()
     }
 
 }

@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -17,9 +18,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import com.example.musicapp.LastFmApp
+import com.example.musicapp.SearchHistoryAdapter
 import com.example.musicapp.TrackAdapter
+import com.example.musicapp.clearSearchHistory
 import com.example.musicapp.data.remote.common.TrackItem
 import com.example.musicapp.databinding.FragmentSearchBinding
+import com.example.musicapp.getSearchHistory
+import com.example.musicapp.saveSearchRequest
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -42,6 +47,11 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val trackAdapter = TrackAdapter(emptyList())
+        var searchadapter =
+            SearchHistoryAdapter(
+                requireContext().getSearchHistory()?.toList() ?: listOf()
+            )
         val searchViewModel = ViewModelProvider(this).get(SearchResponseViewModel::class.java)
         val lastFmApp = activity?.application as LastFmApp
         val lastFmApi = lastFmApp.lastFmApi
@@ -49,57 +59,97 @@ class SearchFragment : Fragment() {
         binding.recyclerView.addItemDecoration(VerticalSpaceItemDecoration(spacingInPixels))
         // Создаем Observable из изменений текста в EditText
         val textChangesObservable = Observable.create<String> { emitter ->
-            binding.editText.addTextChangedListener { s -> emitter.onNext(s?.toString() ?: "") }
+            binding.editText.addTextChangedListener { s ->
+                emitter.onNext(s?.toString() ?: "")
+                binding.searchPb.visibility = if (s.toString().isNotEmpty()) {
+                    binding.recyclerView.visibility = View.GONE
+                    View.VISIBLE
+                } else {
+                    searchadapter =
+                        SearchHistoryAdapter(
+                            requireContext().getSearchHistory()?.toList() ?: listOf()
+                        )
+                    binding.recyclerView.adapter = searchadapter
+                    View.GONE
+                }
+            }
         }
 
         // Добавляем задержку с помощью оператора debounce
         val disposable = textChangesObservable
+            .debounce(2000, TimeUnit.MILLISECONDS)
             .observeOn(AndroidSchedulers.mainThread())
-            .debounce(1000, TimeUnit.MILLISECONDS) // Задержка в 5 секунд
             .subscribe { text ->
-                // Приемник обработанных данных
-                if (text.isNotEmpty()) {
+                // Проверяем, пустое ли поле EditText
+                val isTextEmpty = text.isEmpty()
+
+                // Показываем или скрываем значок очистки в зависимости от наличия текста
+                binding.closeIcon.visibility = if (isTextEmpty) View.INVISIBLE else View.VISIBLE
+                binding.binIcon.visibility = if (isTextEmpty && searchadapter.searchHistory.isNotEmpty()) View.VISIBLE else View.GONE
+
+                // Выполняем поиск только если текст не пустой
+                if (!isTextEmpty) {
                     searchViewModel.searchTrack(lastFmApi, text)
+                    binding.searchPb.visibility = View.GONE
+                    binding.recyclerView.adapter = trackAdapter
                 }
+
+
             }
 
         compositeDisposable.add(disposable)
 
 
-        binding.recyclerView.adapter = TrackAdapter(emptyList())
+        binding.recyclerView.adapter = searchadapter
 
         binding.noInternet.button.setOnClickListener {
             searchViewModel.searchTrack(lastFmApi, binding.editText.text?.toString() ?: "")
         }
 
-        searchViewModel.success.observe(viewLifecycleOwner) { success ->
-            if (!success) {
-                binding.recyclerView.visibility = View.GONE
-                binding.noInternet.root.visibility = View.VISIBLE
-            } else {
-                binding.recyclerView.visibility = View.VISIBLE
-                binding.noInternet.root.visibility = View.GONE
-            }
+        searchViewModel.status.observe(viewLifecycleOwner) {
+            binding.recyclerView.visibility =
+                if (it == SearchResponseViewModel.StatusClass.SUCCESS) {
+                    requireContext().saveSearchRequest(binding.editText.text.toString())
+                    View.VISIBLE
+                } else if (it == SearchResponseViewModel.StatusClass.NO_SEARCH) {
+                    binding.recyclerView.adapter = searchadapter
+                    View.VISIBLE
+                } else View.GONE
 
+            binding.noInternet.root.visibility =
+                if (it == SearchResponseViewModel.StatusClass.INTERNET_FAIL) View.VISIBLE
+                else View.GONE
+
+            binding.noSearchResults.root.visibility =
+                if (it == SearchResponseViewModel.StatusClass.NO_TRACKS_FAIL) View.VISIBLE
+                else View.GONE
+
+            Toast.makeText(context, it.name, Toast.LENGTH_LONG).show()
         }
 
         searchViewModel.tracks.observe(viewLifecycleOwner) { tracks ->
-            ((binding.recyclerView.adapter) as TrackAdapter).tracks = if (tracks.isEmpty()) {
-                binding.recyclerView.visibility = View.GONE
-                binding.noSearchResults.root.visibility = View.VISIBLE
-                emptyList()
-            } else {
-                binding.recyclerView.visibility = View.VISIBLE
-                binding.noSearchResults.root.visibility = View.GONE
-                tracks
+            val currentAdapter = binding.recyclerView.adapter
+            if (currentAdapter is TrackAdapter) {
+                currentAdapter.tracks = if (tracks.isEmpty()) emptyList() else tracks
+                currentAdapter.notifyDataSetChanged()
             }
-            ((binding.recyclerView.adapter) as TrackAdapter).notifyDataSetChanged()
         }
 
         binding.closeIcon.setOnClickListener {
             hideKeyboard()
             binding.editText.clearFocus()
             binding.editText.text.clear()
+            val currentAdapter = binding.recyclerView.adapter
+            if (currentAdapter is TrackAdapter) {
+                val adapter = ((binding.recyclerView.adapter) as TrackAdapter)
+                adapter.clearTrackList()
+            }
+            searchViewModel.clear()
+        }
+
+        binding.binIcon.setOnClickListener {
+            ((binding.recyclerView.adapter) as SearchHistoryAdapter).clear()
+            context?.clearSearchHistory()
         }
     }
 

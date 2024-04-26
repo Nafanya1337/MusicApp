@@ -3,4 +3,5 @@
     <dimen name="header_text_size">16sp</dimen>
     <dimen name="button_text_size">16sp</dimen>
     <dimen name="_12sp_text_size">12sp</dimen>
+    <dimen name="_24sp_text_size">24sp</dimen>
 </resources>

@@ -32,6 +32,10 @@ class TrackAdapter(var tracks: List<TrackItem>) : RecyclerView.Adapter<TrackAdap
         Glide.with(holder.itemView).load(imageUrl).into(holder.trackImage)
     }
 
+    public fun clearTrackList() {
+        tracks = listOf()
+    }
+
     override fun getItemCount(): Int {
         return tracks.size
     }
