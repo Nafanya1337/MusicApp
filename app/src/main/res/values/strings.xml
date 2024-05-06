@@ -30,4 +30,6 @@
     <string name="darktheme">DarkTheme</string>
     <string name="dark_theme">Dark Theme</string>
     <string name="save">Save</string>
+    <string name="songname">Songname</string>
+    <string name="artistname">Artistname</string>
 </resources>

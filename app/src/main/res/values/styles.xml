@@ -28,6 +28,24 @@
         <item name="fontFamily">@font/sf_pro_display_semibold</item>
     </style>
 
+    <style name="Mini_pleer_Songname">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/_14sp_text_size</item>
+        <item name="maxLines">1</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="fontFamily">@font/sf_pro_display_regular</item>
+    </style>
+
+    <style name="Mini_pleer_Artistname">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/_11sp_text_size</item>
+        <item name="maxLines">1</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="fontFamily">@font/sf_pro_display_thin</item>
+    </style>
+
     <style name="Button_Text">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

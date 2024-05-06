@@ -21,6 +21,8 @@ fun Context.darkThemeIsChecked(): Boolean {
 
 fun Context.saveSearchRequest(request: String) {
     val set: MutableSet<String> = getSearchHistory()!!.toMutableSet()
+    if (set.size == 10)
+        set.remove(set.last())
     set.add(request)
     getSharedPreferences(SEARCH_PREFERENCES, Context.MODE_PRIVATE).edit().putStringSet(
         SEARCH_HISTORY_KEY, set
