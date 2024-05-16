@@ -8,7 +8,10 @@
         <item name="android:textColor">@color/black</item>
         <item name="android:textColorHint">@color/gray</item>
         <item name="background">@color/white</item>
-        <item name="android:statusBarColor" tools:targetApi="l">@color/white</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/player_background_color</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
     </style>
     <style name="Theme.MusicApp" parent="Base.Theme.MusicApp" />
 </resources>

@@ -8,4 +8,11 @@
     <color name="purple">#7E57E4</color>
     <color name="light_purple">#9877E2</color>
     <color name="transparent">#00000000</color>
+
+    <color name="player_background_color">#D0CFD1</color>
+
+    <color name="song_card_background_color">#DCD9DD</color>
+
+
+    <color name="dark_gray">#373737</color>
 </resources>

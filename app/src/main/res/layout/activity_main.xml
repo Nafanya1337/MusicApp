@@ -5,24 +5,30 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".MainActivity">
 
-    <fragment
-        android:id="@+id/fragmentContainer"
-        android:name="androidx.navigation.fragment.NavHostFragment"
+    <!-- Используйте FrameLayout для того, чтобы можно было наложить один фрагмент на другой -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        app:defaultNavHost="true"
-        app:navGraph="@navigation/nav_graph" />
+        android:layout_height="match_parent">
 
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:id="@+id/bottom_navigation_menu"
-        app:labelVisibilityMode="unlabeled"
-        app:menu="@menu/menu"
-        android:foreground="@drawable/rounded_corner_menu"
-        app:itemIconTint="@color/bottom_nav_item_selector"
-        app:itemActiveIndicatorStyle="@color/purple"/>
+        <fragment
+            android:id="@+id/fragmentContainer"
+            android:name="androidx.navigation.fragment.NavHostFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:defaultNavHost="true"
+            app:navGraph="@navigation/nav_graph" />
+
+        <!-- Мини-плеер будет наложен поверх NavHostFragment -->
+        <include
+            android:id="@+id/mini_player_layout"
+            layout="@layout/mini_player_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom"
+            />
+
+    </FrameLayout>
 </LinearLayout>

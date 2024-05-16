@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:padding="10dp"
     android:scrollbarSize="0dp"
-    tools:context=".HomeFragment">
+    tools:context=".presentation.home.HomeFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -85,7 +85,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chartsRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="235dp"
+            android:layout_height="170dp"
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
@@ -103,24 +103,46 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/chartsRecyclerView" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/genres_chip_group"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/recommendationsTextView">
-
-        </com.google.android.material.chip.ChipGroup>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recommendationsRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="210dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:minHeight="150dp"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/genres_chip_group" />
+            app:layout_constraintTop_toBottomOf="@id/recommendationsTextView" />
+
+        <ProgressBar
+            android:id="@+id/chartProgressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/chartsRecyclerView"
+            app:layout_constraintEnd_toEndOf="@+id/chartsRecyclerView"
+            app:layout_constraintStart_toStartOf="@+id/chartsRecyclerView"
+            app:layout_constraintTop_toTopOf="@+id/chartsRecyclerView" />
+
+        <ProgressBar
+            android:id="@+id/radioProgrssBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/recommendationsRecyclerView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/recommendationsRecyclerView"
+            app:layout_constraintTop_toTopOf="@+id/recommendationsRecyclerView" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recommendationsRecyclerView" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

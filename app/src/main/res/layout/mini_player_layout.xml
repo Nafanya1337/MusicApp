@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.musicapp.presentation.utils.SingleViewTouchableMotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    app:layoutDescription="@xml/mini_player_layout_scene2"
+    tools:ignore="contentDescription">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintImage"
+        android:layout_width="match_parent"
+        android:layout_height="105dp"
+        android:background="@drawable/bg_player_selector"
+        android:focusable="false"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_menu"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/currentTrack_trackImage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="10dp"
+        app:layout_constraintBottom_toBottomOf="@id/constraintImage"
+        app:layout_constraintStart_toStartOf="@id/constraintImage"
+        app:layout_constraintTop_toTopOf="@id/constraintImage"
+        tools:srcCompat="@tools:sample/avatars" />
+
+
+    <TextView
+        android:id="@+id/currentTrack_trackName"
+        style="@style/TrackName"
+        android:layout_width="wrap_content"
+        android:layout_marginStart="10dp"
+        android:ellipsize="marquee"
+        android:fadingEdge="horizontal"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxWidth="180dp"
+        android:text="Songname"
+        app:layout_constraintBottom_toTopOf="@id/currentTrack_artistName"
+        app:layout_constraintStart_toEndOf="@id/currentTrack_trackImage"
+        app:layout_constraintTop_toTopOf="@id/currentTrack_trackImage" />
+
+    <TextView
+        android:id="@+id/currentTrack_artistName"
+        style="@style/Songname_Card"
+        android:layout_marginStart="10dp"
+        android:ellipsize="marquee"
+        android:fadingEdge="horizontal"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxWidth="250dp"
+        android:text="Artisttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt"
+        app:layout_constraintBottom_toBottomOf="@+id/currentTrack_trackImage"
+        app:layout_constraintStart_toEndOf="@+id/currentTrack_trackImage"
+        app:layout_constraintTop_toBottomOf="@+id/currentTrack_trackName" />
+
+    <ImageView
+        android:id="@+id/currentTrack_explicit_content_icon"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginStart="5dp"
+        app:layout_constraintBottom_toBottomOf="@id/currentTrack_trackName"
+        app:layout_constraintStart_toEndOf="@id/currentTrack_trackName"
+        app:layout_constraintTop_toTopOf="@id/currentTrack_trackName"
+        app:srcCompat="@drawable/explicit_content_icon" />
+
+    <ImageView
+        android:id="@+id/currentTrack_PlayPauseIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="25dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="@id/constraintImage"
+        app:layout_constraintEnd_toEndOf="@id/constraintImage"
+        app:layout_constraintTop_toTopOf="@id/constraintImage"
+        app:srcCompat="@drawable/selector_play_pause" />
+
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation_menu"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:foreground="@drawable/rounded_corner_menu"
+        app:itemActiveIndicatorStyle="@color/purple"
+        app:itemIconTint="@color/bottom_nav_item_selector"
+        app:labelVisibilityMode="unlabeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/menu" />
+
+    <SeekBar
+        android:id="@+id/trackProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        app:layout_constraintTop_toBottomOf="@id/currentTrack_artistName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
+        />
+
+    <TextView
+        android:id="@+id/fullscreen_trackLength"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:text="0:29"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/trackProgressBar"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/fullscreen_currentPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:text="0:15"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/trackProgressBar"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/button_previous"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="20dp"
+        android:src="@drawable/selector_button_previous"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/currentTrack_PlayPauseIcon"
+        app:layout_constraintStart_toStartOf="@id/currentTrack_PlayPauseIcon"
+        app:layout_constraintTop_toTopOf="@id/currentTrack_PlayPauseIcon" />
+
+    <ImageView
+        android:id="@+id/button_next"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/selector_button_next"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/currentTrack_PlayPauseIcon"
+        app:layout_constraintEnd_toEndOf="@id/currentTrack_PlayPauseIcon"
+        app:layout_constraintTop_toTopOf="@id/currentTrack_PlayPauseIcon" />
+
+    <ImageView
+        android:id="@+id/button_like"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/selector_button_like"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/currentTrack_PlayPauseIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/currentTrack_PlayPauseIcon" />
+
+    <ImageView
+        android:id="@+id/button_delete"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/selector_button_download"
+        android:visibility="gone"
+        app:layout_constraintEnd_toStartOf="@id/currentTrack_trackName"
+        app:layout_constraintTop_toTopOf="@id/currentTrack_trackName"
+        app:layout_constraintBottom_toBottomOf="@id/currentTrack_artistName" />
+
+    <ImageView
+        android:id="@+id/button_settings"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/more_button"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/currentTrack_trackName"
+        app:layout_constraintBottom_toBottomOf="@id/currentTrack_artistName" />
+
+    <ImageView
+        android:id="@+id/button_remesh"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/selector_button_remesh"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/currentTrack_PlayPauseIcon"
+        app:layout_constraintBottom_toTopOf="@id/button_loop"/>
+
+    <ImageView
+        android:id="@+id/button_loop"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:src="@drawable/selector_button_loop"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/button_remesh"
+        app:layout_constraintBottom_toBottomOf="@id/currentTrack_PlayPauseIcon"
+        app:layout_constraintVertical_chainStyle="spread_inside"/>
+
+    <TextView
+        android:id="@+id/now_playing_Header"
+        style="@style/CurrentPlaylistStyleHeader"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        android:text="Now playing"
+        android:gravity="center"
+        android:scaleX="0"
+        android:scaleY="0"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/playlist_name"
+        app:layout_constraintStart_toStartOf="@id/playlist_name"
+        app:layout_constraintBottom_toTopOf="@id/playlist_name"/>
+
+    <TextView
+        android:id="@+id/playlist_name"
+        style="@style/CurrentPlaylistStyleName"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="Best of the best"
+        android:gravity="center"
+        android:scaleX="0"
+        android:scaleY="0"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@id/currentTrack_trackImage"
+        app:layout_constraintStart_toStartOf="@id/currentTrack_trackImage"
+        app:layout_constraintBottom_toTopOf="@id/currentTrack_trackImage"/>
+</com.example.musicapp.presentation.utils.SingleViewTouchableMotionLayout>

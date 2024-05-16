@@ -7,41 +7,55 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.musicapp.HomeFragment"
+        android:name="com.example.musicapp.presentation.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_homeFragment_to_accountFragment"
-            app:destination="@id/accountFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
-        android:name="com.example.musicapp.screens.SearchFragment"
+        android:name="com.example.musicapp.presentation.search.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
     <fragment
         android:id="@+id/libraryFragment"
-        android:name="com.example.musicapp.LibraryFragment"
+        android:name="com.example.musicapp.presentation.library.LibraryFragment"
         android:label="LibraryFragment" />
     <fragment
         android:id="@+id/accountFragment"
-        android:name="com.example.musicapp.AccountFragment"
+        android:name="com.example.musicapp.presentation.artist.ArtistFragment"
         android:label="fragment_account"
-        tools:layout="@layout/fragment_account" >
-        <action
-            android:id="@+id/action_accountFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
-        <action
-            android:id="@+id/action_accountFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
+        tools:layout="@layout/fragment_artst_card">
+        <argument
+            android:name="id"
+            app:argType="long" />
+        <deepLink
+            android:id="@+id/deepLink"
+            android:autoVerify="true"
+            app:uri="https://www.deezer.com/artist/{id}" />
     </fragment>
+
+    <action
+        android:id="@+id/action_accountFragment_self"
+        app:destination="@id/accountFragment"
+        app:launchSingleTop="true" />
+
+    <action
+        android:id="@+id/action_to_playlistFragment"
+        app:destination="@id/playlistFragment" />
+
     <fragment
         android:id="@+id/settingsFragment"
-        android:name="com.example.musicapp.SettingsFragment"
+        android:name="com.example.musicapp.presentation.settings.SettingsFragment"
         android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" >
-        <action
-            android:id="@+id/action_settingsFragment_to_accountFragment"
-            app:destination="@id/accountFragment" />
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/playlistFragment"
+        android:name="com.example.musicapp.presentation.playlist.PlaylistFragment"
+        android:label="fragment_playlist"
+        tools:layout="@layout/fragment_playlist" >
+
+        <argument
+            android:name="currentPlaylist"
+            app:argType="com.example.musicapp.data.remote.models.home.RadioDTO" />
     </fragment>
 </navigation>

@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="header_text_size">16sp</dimen>
+    <dimen name="_16sp_text_size">16sp</dimen>
     <dimen name="button_text_size">16sp</dimen>
     <dimen name="_12sp_text_size">12sp</dimen>
+    <dimen name="_14sp_text_size">14sp</dimen>
     <dimen name="_24sp_text_size">24sp</dimen>
+    <dimen name="_13sp_text_size">13sp</dimen>
+    <dimen name="_20sp_text_size">20sp</dimen>
 </resources>

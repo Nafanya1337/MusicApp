@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Состояние при воспроизведении (когда должна быть показана кнопка паузы) -->
+    <item android:drawable="@drawable/icon_pause" android:state_selected="true"/>
+    <!-- Состояние по умолчанию (когда должна быть показана кнопка воспроизведения) -->
+    <item android:drawable="@drawable/icon_play"/>
+</selector>

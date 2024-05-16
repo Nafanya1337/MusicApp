@@ -1,0 +1,50 @@
+package com.example.musicapp.data.remote.models
+
+import android.os.Parcelable
+import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
+import kotlin.time.Duration
+
+data class CurrentTrackDTO(
+    @SerializedName("id")
+    val id: Long,
+    @SerializedName("title")
+    val title: String,
+    @SerializedName("link")
+    val link: String,
+    @SerializedName("share")
+    val share: String,
+    @SerializedName("duration")
+    val duration: Duration,
+    @SerializedName("release_date")
+    val releaseDate: String,
+    @SerializedName("explicit_lyrics")
+    val explicitLyrics: Boolean,
+    @SerializedName("preview")
+    val preview: String,
+    @SerializedName("contributors")
+    val contributors: List<ContributorsDTO>,
+    @SerializedName("album")
+    val album: AlbumInfoDTO
+)
+
+data class AlbumInfoDTO(
+    @SerializedName("id")
+    val id: Long,
+    @SerializedName("title")
+    val title: String,
+    @SerializedName("cover_big")
+    val picture: String,
+    @SerializedName("cover_medium")
+    val pictureBig: String?
+)
+
+@Parcelize
+data class ContributorsDTO(
+    @SerializedName("id")
+    val id: Long,
+    @SerializedName("name")
+    val name: String,
+    @SerializedName("picture_big")
+    val picture: String
+) : Parcelable

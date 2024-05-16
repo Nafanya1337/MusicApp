@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="150dp"
+    android:background="@drawable/playlist_bg"
+    android:layout_height="200dp">
+
+
+    <ImageView
+        android:id="@+id/playlistImage"
+        android:layout_width="125dp"
+        android:layout_height="125dp"
+        android:layout_gravity="center|top"
+        app:srcCompat="@drawable/image"
+        android:layout_marginTop="10dp"
+        android:scaleType="centerCrop"
+        tools:layout_editor_absoluteX="15dp"
+        tools:layout_editor_absoluteY="6dp" />
+
+    <TextView
+        android:id="@+id/playlistName"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="32dp"
+        android:layout_width="wrap_content"
+        android:maxWidth="130dp"
+        android:singleLine="true"
+        style="@style/PlaylistName"
+        android:layout_height="wrap_content"
+        android:text="PlaylistName" />
+
+    <TextView
+        android:id="@+id/playlistArtist"
+        android:layout_gravity="center|bottom"
+        android:layout_marginBottom="14dp"
+        android:layout_width="wrap_content"
+        android:maxWidth="130dp"
+        android:singleLine="true"
+        style="@style/PlaylistArtist"
+        android:layout_height="wrap_content"
+        android:text="Artist" />
+
+
+</FrameLayout>

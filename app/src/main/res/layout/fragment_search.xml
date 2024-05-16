@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="10dp"
     android:scrollbarSize="0dp"
-    tools:context=".screens.SearchFragment">
+    tools:context=".presentation.search.SearchFragment">
 
 
 
@@ -71,37 +71,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline" />
 
-        <EditText
-            android:id="@+id/editText"
-            style="@style/ThemeOverlay.Material3.MaterialTimePicker.Display.TextInputEditText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textStyle="normal"
-            android:fontFamily="@font/sf_pro_display_regular"
-            android:hint="@string/search_text"
-            android:lines="1"
-            app:layout_constraintEnd_toStartOf="@+id/closeIcon"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView3" />
+    <EditText
+        android:id="@+id/editText"
+        style="@style/ThemeOverlay.Material3.MaterialTimePicker.Display.TextInputEditText"
+        android:layout_width="0dp"
+        android:singleLine="true"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/sf_pro_display_regular"
+        android:hint="@string/search_text"
+        android:inputType="textAutoComplete"
+        android:lines="1"
+        android:textStyle="normal"
+        app:layout_constraintEnd_toStartOf="@+id/closeIcon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
-        <ImageView
-            android:id="@+id/closeIcon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_close_clear_cancel"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="@+id/editText"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/editText" />
+    <ImageView
+        android:id="@+id/closeIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_close_clear_cancel"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="@+id/editText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/editText" />
 
     <ImageView
         android:id="@+id/binIcon"
-        android:visibility="gone"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:src="@drawable/bin"
-        app:layout_constraintBottom_toBottomOf="@+id/editText"
-        app:layout_constraintStart_toEndOf="@+id/editText"
-        app:layout_constraintTop_toTopOf="@+id/editText" />
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@id/editText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/editText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
