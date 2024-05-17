@@ -10,4 +10,4 @@ data class TrackVO(
     val artist: ArtistVO,
     var album: AlbumInfoVO?,
     val position: Int?
-)
+) : Playlistable

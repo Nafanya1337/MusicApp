@@ -32,6 +32,8 @@ class ArtistFragment : Fragment(), ListTrackAdapter.Clickable, PlaylistAdapter.C
 
     private val artistFragmentViewModel: ArtistFragmentViewModel by viewModels { ArtistFragmentViewModel.Factory }
 
+    private var adapter: ListTrackAdapter? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,8 +55,10 @@ class ArtistFragment : Fragment(), ListTrackAdapter.Clickable, PlaylistAdapter.C
 
         binding.artistAlbumsRecyclerView.addItemDecoration(SpaceItemDecorationUtil(0, 10))
 
-        binding.topTracksRecyclerView.adapter =
-            ListTrackAdapter(TrackListVO(title = "Top 5", list = emptyList()), this)
+        adapter = ListTrackAdapter(title = "Top 5", this)
+
+        binding.topTracksRecyclerView.adapter = adapter
+
         binding.topTracksRecyclerView.layoutManager =
             GridLayoutManager(activity, 5, GridLayoutManager.HORIZONTAL, false)
         binding.topTracksRecyclerView.addItemDecoration(SpaceItemDecorationUtil(5, 10))
@@ -67,7 +71,7 @@ class ArtistFragment : Fragment(), ListTrackAdapter.Clickable, PlaylistAdapter.C
 
         artistFragmentViewModel.tracks.observe(viewLifecycleOwner) {tracks ->
             binding.topArtistTracksProgressBar.visibility = View.GONE
-            (binding.topTracksRecyclerView.adapter as ListTrackAdapter).setTracklist(tracks)
+            adapter?.list = tracks
         }
 
         artistFragmentViewModel.albums.observe(viewLifecycleOwner) {albums ->

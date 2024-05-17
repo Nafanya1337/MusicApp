@@ -12,6 +12,7 @@
         <item name="android:navigationBarColor">@color/player_background_color</item>
         <item name="android:windowTranslucentStatus">false</item>
         <item name="android:windowTranslucentNavigation">false</item>
+        <item name="android:windowLightStatusBar">true</item>
     </style>
     <style name="Theme.MusicApp" parent="Base.Theme.MusicApp" />
 </resources>

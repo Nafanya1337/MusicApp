@@ -1,16 +1,27 @@
 package com.example.musicapp.presentation
 
+import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.musicapp.MusicApp
+import com.example.musicapp.MusicApp.Companion.user
 import com.example.musicapp.data.repository.track.TrackRepositoryImpl
 import com.example.musicapp.domain.models.CurrentTrackVO
 import com.example.musicapp.domain.models.TrackListVO
+import com.example.musicapp.domain.models.login.User
+import com.example.musicapp.domain.usecase.login.GetCurrentUserUseCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
-class MainActivityViewModel(private val trackRepositoryImpl: TrackRepositoryImpl) : ViewModel() {
+class MainActivityViewModel(
+    private val trackRepositoryImpl: TrackRepositoryImpl,
+    private val getCurrentUserUseCase: GetCurrentUserUseCase
+) : ViewModel() {
 
     val track = MutableLiveData<CurrentTrackVO?>(null)
     val isPlaying = MutableLiveData<Boolean>()
@@ -72,14 +83,29 @@ class MainActivityViewModel(private val trackRepositoryImpl: TrackRepositoryImpl
             currentPosition.value?.minus(1)?.let { this.setCurrentPosition(it) }
     }
 
+    val user = MutableLiveData<User?>()
+
+    fun getUser() {
+        viewModelScope.launch(Dispatchers.IO) {
+            getCurrentUserUseCase.execute { data ->
+                Log.d("mymy", data.toString())
+                this@MainActivityViewModel.user.postValue(data)
+            }
+        }
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val trackRepositoryImpl =
                     (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MusicApp).trackRepositoryImpl
 
+                val getCurrentUserUseCase =
+                    GetCurrentUserUseCase((this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MusicApp).loginRepositoryImpl)
+
                 MainActivityViewModel(
-                    trackRepositoryImpl
+                    trackRepositoryImpl,
+                    getCurrentUserUseCase
                 )
             }
         }

@@ -8,9 +8,12 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.musicapp.MusicApp
 import com.example.musicapp.data.repository.PlaylistRepositoryImpl
+import com.example.musicapp.data.repository.login.LoginRepositoryImpl
 import com.example.musicapp.domain.models.TrackListVO
 import com.example.musicapp.domain.models.TrackVO
 import com.example.musicapp.domain.models.home.RadioVO
+import com.example.musicapp.domain.models.login.User
+import com.example.musicapp.domain.usecase.login.GetCurrentUserUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -27,6 +30,8 @@ class HomeViewModel(
             recommendationsList.postValue((playlistRepositoryImpl.getRadio().data))
         }
     }
+
+
 
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {

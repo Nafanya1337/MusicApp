@@ -14,29 +14,28 @@
         android:layout_height="match_parent"
         tools:ignore="ScrollViewSize">
 
-        <ImageView
-            android:id="@+id/notifications"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:src="@drawable/new_notifications_no"
-            app:layout_constraintBottom_toBottomOf="@id/profileImage"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/profileImage" />
 
-        <ImageView
-            android:id="@+id/profileImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/round_circle"
+        <androidx.cardview.widget.CardView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            app:cardCornerRadius="50dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+            <ImageView
+                android:id="@+id/profileImage"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/round_circle" />
+        </androidx.cardview.widget.CardView>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline_Header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_begin="52dp" />
+            app:layout_constraintGuide_begin="60dp" />
 
         <Button
             android:id="@+id/vibesButton"

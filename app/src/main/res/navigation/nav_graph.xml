@@ -10,6 +10,14 @@
         android:name="com.example.musicapp.presentation.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
+        <action
+            app:launchSingleTop="true"
+            app:popUpToInclusive="true"
+            android:id="@+id/action_homeFragment_to_auth_nav_graph"
+            app:destination="@id/auth_nav_graph" />
+        <action
+            android:id="@+id/action_homeFragment_to_accountFragment2"
+            app:destination="@id/accountFragment2" />
     </fragment>
     <fragment
         android:id="@+id/searchFragment"
@@ -57,5 +65,15 @@
         <argument
             android:name="currentPlaylist"
             app:argType="com.example.musicapp.data.remote.models.home.RadioDTO" />
+    </fragment>
+    <include app:graph="@navigation/auth_nav_graph" />
+    <fragment
+        android:id="@+id/accountFragment2"
+        android:name="com.example.musicapp.presentation.account.AccountFragment"
+        android:label="fragment_account"
+        tools:layout="@layout/fragment_account" >
+        <action
+            android:id="@+id/action_accountFragment2_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
     </fragment>
 </navigation>

@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("androidx.navigation.safeargs.kotlin")
     id("kotlin-parcelize")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -51,6 +52,9 @@ dependencies {
     implementation("androidx.media3:media3-exoplayer:1.3.1")
     implementation("com.google.firebase:firebase-firestore-ktx:25.0.0")
     implementation("androidx.media3:media3-session:1.3.1")
+    implementation("com.google.firebase:firebase-auth:23.0.0")
+    implementation("androidx.legacy:legacy-support-v4:1.0.0")
+    implementation("androidx.fragment:fragment-ktx:1.5.6")
 
     // Navigation
     val nav_version = "2.7.7"
@@ -83,4 +87,8 @@ dependencies {
     implementation("androidx.media3:media3-datasource-okhttp:1.3.1")
 
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+
+    implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
+    implementation("com.google.firebase:firebase-auth:23.0.0")
+    implementation("com.google.firebase:firebase-analytics")
 }

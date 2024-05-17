@@ -1,61 +1,123 @@
 package com.example.musicapp
 
+
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.musicapp.data.utils.RoundedCornersTransformation
+import com.example.musicapp.databinding.PlaylistHeaderBinding
+import com.example.musicapp.databinding.SongCardLayoutBinding
+import com.example.musicapp.domain.models.Playlistable
 import com.example.musicapp.domain.models.TrackListVO
 import com.example.musicapp.domain.models.TrackVO
+import com.example.musicapp.domain.models.home.RadioVO
 
-class ListTrackAdapter(var trackList: TrackListVO, val clickableImpl: Clickable) : RecyclerView.Adapter<ListTrackAdapter.TrackViewHolder>() {
+class ListTrackAdapter(
+    var title: String,
+    val clickableImpl: Clickable,
+    val isPlaylist: Boolean = false,
+    val diffUtilCallback: DiffUtilCallback<Playlistable> = DiffUtilCallback(emptyList(), emptyList()),
+) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    var list: List<Playlistable> = emptyList()
+        set(value) {
+            diffUtilCallback.oldList = field
+            diffUtilCallback.newList = value
+            val result = DiffUtil.calculateDiff(diffUtilCallback)
+            field = value
+            result.dispatchUpdatesTo(this)
+        }
 
     interface Clickable {
         fun onItemClick(trackList: TrackListVO, position: Int)
     }
 
-    fun setTracklist(tracklist: List<TrackVO>) {
-        this.trackList.list = tracklist
-        notifyDataSetChanged()
+    inner class TrackViewHolder(val binding: SongCardLayoutBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    inner class HeaderViewHoler(val binding: PlaylistHeaderBinding) :
+        RecyclerView.ViewHolder(binding.root)
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when (viewType) {
+            PLAYLIST_VIEW -> {
+                val binding = PlaylistHeaderBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+            HeaderViewHoler(binding)}
+
+            TRACK_VIEW -> {
+                val binding = SongCardLayoutBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                TrackViewHolder(binding)
+            }
+            else -> throw ViewHolderNotFoundExepction()
+        }
     }
 
-    inner class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val trackImage: ImageView = itemView.findViewById(R.id.trackImage)
-        val trackName: TextView = itemView.findViewById(R.id.trackName)
-        val artistName: TextView = itemView.findViewById(R.id.artistName)
-        val explicitContentIcon: ImageView = itemView.findViewById(R.id.explicit_content_icon)
+    override fun getItemViewType(position: Int): Int {
+        Log.d("mymy", position.toString())
+        return if (isPlaylist && position == PLAYLIST_VIEW) PLAYLIST_VIEW else TRACK_VIEW
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.song_card_layout, parent, false)
-        return TrackViewHolder(view)
-    }
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        if (holder is TrackViewHolder) {
+            val track = list[position]
+            (track as? TrackVO)?.let {
+                holder.binding.trackName.text = track.title
+               holder.binding.artistName.text = track.artist.name
+                // Загрузка изображения trackImage с помощью Picasso, Glide или другой библиотеки для загрузки изображений
+                val imageUrl = track.album?.picture
+                    ?: "https://e-cdns-images.dzcdn.net/images/misc/235ec47f2b21c3c73e02fce66f56ccc5/500x500-000000-80-0-0.jpg"
+                Glide
+                    .with(holder.itemView)
+                    .load(imageUrl)
+                    .transform(RoundedCornersTransformation(20))
+                    .into(holder.binding.trackImage)
+                if (!track.explicitLyrics) {
+                    holder.binding.explicitContentIcon.visibility = View.GONE
+                }
+                if (holder.binding.trackName.width >= 100)
+                    holder.binding.trackName.isSelected = true
+                holder.itemView.setOnClickListener {
+                    clickableImpl.onItemClick(TrackListVO(title, list), position)
+                }
+            }
+        }
 
-    override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
-        val track = trackList.list[position]
-        // Здесь установите данные из объекта Track в соответствующие Views
-        holder.trackName.text = track.title
-        holder.artistName.text = track.artist.name
-        // Загрузка изображения trackImage с помощью Picasso, Glide или другой библиотеки для загрузки изображений
-        val imageUrl = track.album?.picture ?: "https://e-cdns-images.dzcdn.net/images/misc/235ec47f2b21c3c73e02fce66f56ccc5/500x500-000000-80-0-0.jpg"
-        Glide
-            .with(holder.itemView)
-            .load(imageUrl)
-            .transform(RoundedCornersTransformation(20))
-            .into(holder.trackImage)
-        if (!track.explicitLyrics) { holder.explicitContentIcon.visibility = View.GONE }
-        if (holder.trackName.width >= 100)
-            holder.trackName.isSelected = true
-        holder.itemView.setOnClickListener{
-            clickableImpl.onItemClick(trackList, position)
+        if (holder is HeaderViewHoler) {
+            val header = list[position]
+            (header as? RadioVO)?.let {
+                holder.binding.playlistArtistName.text =
+                    it.contributor?.joinToString(", ") { it.name }
+                holder.binding.playlistPlaylistName.text = it.title
+                Glide
+                    .with(holder.itemView)
+                    .load(it.picture)
+                    .transform(RoundedCornersTransformation(20))
+                    .into(holder.binding.playlistImage)
+            }
         }
     }
 
     override fun getItemCount(): Int {
-        return trackList.list.size
+        return list.size
+    }
+
+    companion object {
+        const val PLAYLIST_VIEW = 0
+        const val TRACK_VIEW = 1
     }
 }
+
+class ViewHolderNotFoundExepction : RuntimeException()
 

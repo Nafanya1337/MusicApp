@@ -1,12 +1,17 @@
 package com.example.musicapp
 
+import AuthStorageImpl
 import android.app.Application
+import androidx.lifecycle.MutableLiveData
 import com.example.musicapp.data.remote.interfaces.MusicApi
 import com.example.musicapp.data.repository.PlaylistRepositoryImpl
 import com.example.musicapp.data.repository.artist.ArtistRepositoryImpl
+import com.example.musicapp.data.repository.login.LoginRepositoryImpl
 import com.example.musicapp.data.repository.search.SearchRequestRepositoryImpl
 import com.example.musicapp.data.repository.track.TrackRepositoryImpl
 import com.example.musicapp.data.storage.sharedprefs.SearchRequestSharedPrefsStorage
+import com.example.musicapp.domain.models.login.User
+import com.google.firebase.FirebaseApp
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -14,6 +19,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 class MusicApp : Application() {
+
+    companion object {
+        var user = MutableLiveData<User?>()
+    }
 
     public lateinit var musicApi: MusicApi
 
@@ -42,10 +51,21 @@ class MusicApp : Application() {
         )
     }
 
+    val loginRepositoryImpl by lazy {
+        LoginRepositoryImpl(
+            authStorage = AuthStorageImpl()
+        )
+    }
+
     override fun onCreate() {
         super.onCreate()
         configureRetrofit()
 //        applyTheme()
+        FirebaseApp.initializeApp(this)
+    }
+
+    override fun onTerminate() {
+        super.onTerminate()
     }
 
     private fun configureRetrofit() {

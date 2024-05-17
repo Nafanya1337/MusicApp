@@ -1,4 +1,4 @@
-package com.example.musicapp
+package com.example.musicapp.presentation.artist
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.musicapp.R
 import com.example.musicapp.data.utils.RoundedCornersTransformation
 import com.example.musicapp.domain.models.ContributorsVO
 

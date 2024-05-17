@@ -32,7 +32,7 @@ class SearchFragment : Fragment(), SearchHistoryAdapter.Clickable, ListTrackAdap
 
     private val searchViewModel: SearchViewModel by viewModels { SearchViewModel.Factory }
 
-    private val trackAdapter = ListTrackAdapter(TrackListVO(title = "Search", list = emptyList()), this)
+    private var adapter : ListTrackAdapter? = null
     private val searchAdapter by lazy {
         SearchHistoryAdapter(emptyList(), this)
     }
@@ -64,6 +64,8 @@ class SearchFragment : Fragment(), SearchHistoryAdapter.Clickable, ListTrackAdap
 
         binding.recyclerView.addItemDecoration(VerticalSpaceItemDecoration(spacingInPixels))
 
+        adapter = ListTrackAdapter(title = "Search", this)
+
         searchViewModel.status.observe(viewLifecycleOwner) {
             binding.searchPb.visibility = View.GONE
             binding.recyclerView.visibility =
@@ -76,7 +78,7 @@ class SearchFragment : Fragment(), SearchHistoryAdapter.Clickable, ListTrackAdap
                         )
                         binding.closeIcon.visibility = View.VISIBLE
                         binding.binIcon.visibility = View.INVISIBLE
-                        binding.recyclerView.adapter = trackAdapter
+                        binding.recyclerView.adapter = adapter
 
                         View.VISIBLE
                     }
@@ -111,9 +113,7 @@ class SearchFragment : Fragment(), SearchHistoryAdapter.Clickable, ListTrackAdap
         }
 
         searchViewModel.tracks.observe(viewLifecycleOwner) {
-            trackAdapter.trackList.list = it
-            binding.recyclerView.adapter!!.notifyDataSetChanged()
-
+            adapter?.list = it
         }
 
         searchViewModel.history.observe(viewLifecycleOwner) {

@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.ActionBar.LayoutParams
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.core.view.WindowCompat
@@ -21,14 +20,19 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.musicapp.MusicApp.Companion.user
 import com.example.musicapp.data.remote.models.ContributorsDTO
 import com.example.musicapp.data.utils.RoundedCornersTransformation
 import com.example.musicapp.databinding.ActivityMainBinding
 import com.example.musicapp.domain.models.ContributorsVO
 import com.example.musicapp.domain.models.CurrentTrackVO
 import com.example.musicapp.domain.models.TrackListVO
+import com.example.musicapp.domain.models.TrackVO
+import com.example.musicapp.domain.models.login.User
 import com.example.musicapp.presentation.MainActivityViewModel
-import com.example.musicapp.presentation.home.HomeFragmentDirections
+import com.example.musicapp.presentation.artist.ArtistsBottomSheetFragment
+import com.example.musicapp.presentation.artist.CONTRIBUTORS_CHOOSE_KEY
+import com.example.musicapp.presentation.artist.CONTRIBUTORS_REQUEST_KEY
 import com.example.musicapp.service.MusicService
 import com.google.common.util.concurrent.MoreExecutors
 import kotlinx.coroutines.CoroutineScope
@@ -41,6 +45,7 @@ import kotlinx.coroutines.withContext
 
 
 class MainActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityMainBinding
 
     private val sessionToken by lazy {
@@ -58,6 +63,8 @@ class MainActivity : AppCompatActivity() {
 
     private val mainActivityViewModel: MainActivityViewModel by viewModels { MainActivityViewModel.Factory }
 
+    val navController by lazy { findNavController(R.id.fragmentContainer) }
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,12 +72,36 @@ class MainActivity : AppCompatActivity() {
             window,
             false
         )
-
+        initUser()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val navController = findNavController(R.id.fragmentContainer)
         val navView = binding.miniPlayerLayout.bottomNavigationMenu
         NavigationUI.setupWithNavController(navView, navController)
+
+        mainActivityViewModel.user.observe(this) { data ->
+            if (data == null) {
+                binding.miniPlayerLayout.root.visibility = View.GONE
+                navController.navigate(R.id.action_homeFragment_to_auth_nav_graph)
+            } else {
+                MusicApp.user.value = data
+                initUI()
+            }
+        }
+    }
+
+    fun initUser(){
+        mainActivityViewModel.getUser()
+    }
+
+    fun startNewTrackList(trackList: TrackListVO, position: Int = 0) {
+        startUpdatingProgressBar()
+        mainActivityViewModel.setCurrentTrackList(trackList = trackList)
+        mainActivityViewModel.setCurrentPosition(position)
+    }
+
+    private fun initUI(){
+
+        binding.miniPlayerLayout.root.visibility = View.VISIBLE
 
         binding.miniPlayerLayout.bottomNavigationMenu.setBackgroundColor(
             resources.getColor(
@@ -78,14 +109,6 @@ class MainActivity : AppCompatActivity() {
                 null
             )
         )
-
-        navController.addOnDestinationChangedListener { controller, destination, arguments ->
-            if (destination.id != R.id.accountFragment) {
-                // Если текущий destination не является фрагментом артиста, вы можете удалять или заменять фрагмент
-                // Удаление фрагмента из стека навигации
-//                controller.popBackStack(R.id.accountFragment, true)
-            }
-        }
 
         binding.miniPlayerLayout.currentTrackTrackName.isSelected = true
 
@@ -105,6 +128,7 @@ class MainActivity : AppCompatActivity() {
         binding.miniPlayerLayout.buttonPrevious.setOnClickListener {
             mainActivityViewModel.prevPosition()
         }
+
 
         binding.miniPlayerLayout.currentTrackArtistName.setOnClickListener {
             val artists: List<ContributorsVO> = mainActivityViewModel.track.value!!.contributors
@@ -155,6 +179,8 @@ class MainActivity : AppCompatActivity() {
             list?.let {
                 val track = list[pos]
                 CoroutineScope(Dispatchers.IO).launch {
+                    if (track !is TrackVO)
+                        return@launch
                     mainActivityViewModel.playTrack(track.id)
                     val mediaItem = MediaItem.Builder()
                         .setMediaId("media-1")
@@ -183,13 +209,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    fun startNewTrackList(trackList: TrackListVO, position: Int = 0) {
-        startUpdatingProgressBar()
-        mainActivityViewModel.setCurrentTrackList(trackList = trackList)
-        mainActivityViewModel.setCurrentPosition(position)
-    }
-
 
     override fun onStart() {
         super.onStart()

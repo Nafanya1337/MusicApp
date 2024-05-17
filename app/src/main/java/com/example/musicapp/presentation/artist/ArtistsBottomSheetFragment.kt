@@ -1,17 +1,13 @@
-package com.example.musicapp
+package com.example.musicapp.presentation.artist
 
 import android.app.Dialog
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import androidx.fragment.app.setFragmentResult
 import com.example.musicapp.data.remote.models.ContributorsDTO
 import com.example.musicapp.data.utils.ToDomainUtil.toData
@@ -49,7 +45,8 @@ class ArtistsBottomSheetFragment : BottomSheetDialogFragment(), ArtistsAdapter.C
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val contributors: ArrayList<ContributorsDTO>? = arguments?.getParcelableArrayList(CONTRIBUTORS_KEY, ContributorsDTO::class.java)
+        val contributors: ArrayList<ContributorsDTO>? = arguments?.getParcelableArrayList(
+            CONTRIBUTORS_KEY, ContributorsDTO::class.java)
         val list = contributors ?: emptyList<ContributorsDTO>()
         binding.artistsRecycleView.adapter = ArtistsAdapter(artists = list.map { it.toDomain() }, clickable = this)
     }
