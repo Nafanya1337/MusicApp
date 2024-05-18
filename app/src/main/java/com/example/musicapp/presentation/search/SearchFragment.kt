@@ -25,12 +25,13 @@ import com.example.musicapp.domain.models.search.SearchRequestVO
 import com.example.musicapp.domain.models.search.StatusClassVO
 import com.example.musicapp.domain.models.TrackVO
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchFragment : Fragment(), SearchHistoryAdapter.Clickable, ListTrackAdapter.Clickable {
 
     private lateinit var binding: FragmentSearchBinding
 
-    private val searchViewModel: SearchViewModel by viewModels { SearchViewModel.Factory }
+    private val searchViewModel: SearchViewModel by viewModel<SearchViewModel>()
 
     private var adapter : ListTrackAdapter? = null
     private val searchAdapter by lazy {

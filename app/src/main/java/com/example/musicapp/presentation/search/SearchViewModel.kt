@@ -13,32 +13,23 @@ import com.example.musicapp.MusicApp
 import com.example.musicapp.domain.models.search.SearchRequestVO
 import com.example.musicapp.domain.models.search.StatusClassVO
 import com.example.musicapp.domain.models.TrackVO
-import com.example.musicapp.domain.repository.SearchRequestRepository
 import com.example.musicapp.domain.usecase.search.ClearSearchHistoryUseCase
 import com.example.musicapp.domain.usecase.search.GetSearchHistoryUseCase
 import com.example.musicapp.domain.usecase.search.SaveSearchRequestUseCase
+import com.example.musicapp.domain.usecase.search.SearchTracksUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class SearchViewModel(private val searchRequestRepositoryImpl: SearchRequestRepository) :
+class SearchViewModel(
+    private val searchTracksUseCase: SearchTracksUseCase,
+    private val getSearchHistoryUseCase: GetSearchHistoryUseCase,
+    private val saveSearchHistoryUseCase: SaveSearchRequestUseCase,
+    private val clearSearchHistoryUseCase: ClearSearchHistoryUseCase
+) :
     ViewModel() {
-
-    private val getSearchHistoryUseCase by lazy(LazyThreadSafetyMode.NONE) {
-        GetSearchHistoryUseCase(searchRequestRepositoryImpl)
-    }
-    private val saveSearchHistoryUseCase by lazy(LazyThreadSafetyMode.NONE) {
-        SaveSearchRequestUseCase(
-            searchRequestRepositoryImpl
-        )
-    }
-    private val clearSearchHistoryUseCase by lazy(LazyThreadSafetyMode.NONE) {
-        ClearSearchHistoryUseCase(
-            searchRequestRepositoryImpl
-        )
-    }
 
     val tracks: MutableLiveData<List<TrackVO>> = MutableLiveData(emptyList())
     val history: MutableLiveData<List<SearchRequestVO>> = MutableLiveData(emptyList())
@@ -50,7 +41,7 @@ class SearchViewModel(private val searchRequestRepositoryImpl: SearchRequestRepo
         searchJob = viewModelScope.launch(Dispatchers.IO) {
             delay(500)  // задержка перед началом поиска
             try {
-                val searchResponseVO = searchRequestRepositoryImpl.searchTracks(request = searchRequest)
+                val searchResponseVO = searchTracksUseCase.execute(searchRequest = searchRequest)
                 status.postValue(searchResponseVO.status)
                 tracks.postValue(searchResponseVO.list)
             } catch (e: Exception) {
@@ -80,17 +71,5 @@ class SearchViewModel(private val searchRequestRepositoryImpl: SearchRequestRepo
     fun clear() {
         status.value = StatusClassVO.NO_SEARCH
         tracks.value = emptyList()
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val searchRequestRepositoryImpl =
-                    (this[APPLICATION_KEY] as MusicApp).searchRequestRepository
-                SearchViewModel(
-                    searchRequestRepositoryImpl
-                )
-            }
-        }
     }
 }

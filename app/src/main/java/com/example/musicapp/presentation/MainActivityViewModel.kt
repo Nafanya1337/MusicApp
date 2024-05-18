@@ -2,18 +2,14 @@ package com.example.musicapp.presentation
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.musicapp.MusicApp
 import com.example.musicapp.MusicApp.Companion.userFav
-import com.example.musicapp.data.repository.track.TrackRepositoryImpl
 import com.example.musicapp.domain.models.CurrentTrackVO
 import com.example.musicapp.domain.models.TrackListVO
 import com.example.musicapp.domain.models.TrackVO
 import com.example.musicapp.domain.models.artist.ArtistVO
 import com.example.musicapp.domain.models.login.User
+import com.example.musicapp.domain.repository.TrackRepository
 import com.example.musicapp.domain.usecase.login.GetCurrentUserUseCase
 import com.example.musicapp.domain.usecase.track.AddTrackToFavouritesUseCase
 import com.example.musicapp.domain.usecase.track.DeleteFromFavouriteUseCase
@@ -22,7 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivityViewModel(
-    private val trackRepositoryImpl: TrackRepositoryImpl,
+    private val trackRepository: TrackRepository,
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val addTrackToFavouritesUseCase: AddTrackToFavouritesUseCase,
     private val getFavouritesUseCase: GetFavouritesUseCase,
@@ -84,7 +80,7 @@ class MainActivityViewModel(
 
     suspend fun playTrack(id: Long) {
         try {
-            track.postValue(trackRepositoryImpl.streamTrack(id = id))
+            track.postValue(trackRepository.streamTrack(id = id))
             if (track != null) {
                 isPlaying.postValue(true)
             }
@@ -142,35 +138,6 @@ class MainActivityViewModel(
                 getFavouritesUseCase.execute(it)
                     .toMutableList()
             })
-        }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val trackRepositoryImpl =
-                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MusicApp).trackRepositoryImpl
-
-                val getCurrentUserUseCase =
-                    GetCurrentUserUseCase((this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MusicApp).firebaseRepositoryImpl)
-
-                val addTrackToFavouritesUseCase =
-                    AddTrackToFavouritesUseCase((this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MusicApp).firebaseRepositoryImpl)
-
-                val getFavouritesUseCase =
-                    GetFavouritesUseCase((this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MusicApp).firebaseRepositoryImpl)
-
-                val dedeleteFromFavouriteUseCase =
-                    DeleteFromFavouriteUseCase((this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MusicApp).firebaseRepositoryImpl)
-
-                MainActivityViewModel(
-                    trackRepositoryImpl,
-                    getCurrentUserUseCase,
-                    addTrackToFavouritesUseCase,
-                    getFavouritesUseCase,
-                    dedeleteFromFavouriteUseCase
-                )
-            }
         }
     }
 

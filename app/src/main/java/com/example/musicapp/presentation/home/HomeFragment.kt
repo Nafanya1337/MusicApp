@@ -26,12 +26,13 @@ import com.example.musicapp.domain.models.TrackListVO
 import com.example.musicapp.domain.models.TrackVO
 import com.example.musicapp.domain.models.home.RadioVO
 import com.example.musicapp.presentation.utils.SpaceItemDecorationUtil
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class HomeFragment : Fragment(), ListTrackAdapter.Clickable, PlaylistAdapter.Clickable {
 
     private lateinit var binding: FragmentHomeBinding
 
-    private val homeViewModel: HomeViewModel by viewModels { HomeViewModel.Factory }
+    private val homeViewModel: HomeViewModel by viewModel<HomeViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

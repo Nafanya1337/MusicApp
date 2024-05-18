@@ -2,14 +2,13 @@ package com.example.musicapp
 
 import android.content.ComponentName
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.SeekBar
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.core.view.WindowCompat
@@ -17,7 +16,6 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
-import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionToken
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
@@ -45,6 +43,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class MainActivity : AppCompatActivity() {
@@ -64,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         MediaController.Builder(applicationContext, sessionToken).buildAsync()
     }
 
-    private val mainActivityViewModel: MainActivityViewModel by viewModels { MainActivityViewModel.Factory }
+    private val mainActivityViewModel: MainActivityViewModel by viewModel<MainActivityViewModel>()
 
     val navController by lazy { findNavController(R.id.fragmentContainer) }
 
@@ -149,7 +148,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
-                
+
             }
         })
 

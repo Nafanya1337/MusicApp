@@ -11,11 +11,12 @@ import androidx.navigation.fragment.findNavController
 import com.example.musicapp.MainActivity
 import com.example.musicapp.R
 import com.example.musicapp.databinding.FragmentSignInBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SignInFragment : Fragment() {
 
-    private val signInViewModel by viewModels<SignInViewModel> { SignInViewModel.Factory }
+    private val signInViewModel by viewModel<SignInViewModel>()
 
     lateinit var binding: FragmentSignInBinding
 

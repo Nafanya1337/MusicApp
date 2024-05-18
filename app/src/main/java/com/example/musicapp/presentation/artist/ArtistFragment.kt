@@ -23,6 +23,7 @@ import com.example.musicapp.presentation.home.HomeFragmentDirections
 import com.example.musicapp.presentation.home.PlaylistAdapter
 import com.example.musicapp.presentation.playlist.PlaylistFragmentArgs
 import com.example.musicapp.presentation.utils.SpaceItemDecorationUtil
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.properties.Delegates
 
 
@@ -30,7 +31,7 @@ class ArtistFragment : Fragment(), ListTrackAdapter.Clickable, PlaylistAdapter.C
 
     private lateinit var binding: FragmentArtstCardBinding
 
-    private val artistFragmentViewModel: ArtistFragmentViewModel by viewModels { ArtistFragmentViewModel.Factory }
+    private val artistFragmentViewModel: ArtistFragmentViewModel by viewModel<ArtistFragmentViewModel>()
 
     private var adapter: ListTrackAdapter? = null
 

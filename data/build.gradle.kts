@@ -57,4 +57,11 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
+
+    val koinVersion = "3.5.3"
+
+    implementation("io.insert-koin:koin-core:$koinVersion")
+    implementation("io.insert-koin:koin-android:$koinVersion")
+    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    testImplementation("io.insert-koin:koin-test:$koinVersion")
 }

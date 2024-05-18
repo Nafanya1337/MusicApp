@@ -13,13 +13,14 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.musicapp.R
 import com.example.musicapp.databinding.FragmentSignUpBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SignUpFragment : Fragment() {
 
     lateinit var binding: FragmentSignUpBinding
 
-    val signUpViewModel by viewModels<SignUpViewModel> { SignUpViewModel.Factory }
+    val signUpViewModel by viewModel<SignUpViewModel>()
 
     private var imageUri: Uri? = null
 

@@ -91,4 +91,12 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
     implementation("com.google.firebase:firebase-auth:23.0.0")
     implementation("com.google.firebase:firebase-analytics")
+
+    val koinVersion = "3.5.3"
+
+    implementation("io.insert-koin:koin-core:$koinVersion")
+    implementation("io.insert-koin:koin-android:$koinVersion")
+    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    testImplementation("io.insert-koin:koin-test:$koinVersion")
+
 }

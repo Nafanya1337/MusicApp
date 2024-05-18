@@ -20,8 +20,6 @@ class LibraryFragment : Fragment(), ListTrackAdapter.Clickable {
 
     lateinit var binding: FragmentLibraryBinding
 
-    private val libraryFragmentViewModel by viewModels<LibraryFragmentViewModel> { LibraryFragmentViewModel.Factory }
-
     private var adapter: ListTrackAdapter? = null
 
     override fun onCreateView(
@@ -40,8 +38,6 @@ class LibraryFragment : Fragment(), ListTrackAdapter.Clickable {
         binding.favRecyclerView.addItemDecoration(SpaceItemDecorationUtil(10, 10))
         binding.favRecyclerView.adapter = adapter
         MusicApp.userFav.observe(viewLifecycleOwner) { list ->
-            Log.d("mymy", adapter?.list?.size.toString())
-            Log.d("mymy", list?.size.toString())
             adapter?.list = list
         }
 

@@ -21,13 +21,14 @@ import com.example.musicapp.domain.models.PlaylistType
 import com.example.musicapp.domain.models.TrackListVO
 import com.example.musicapp.domain.models.home.RadioVO
 import com.example.musicapp.presentation.utils.SpaceItemDecorationUtil
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class PlaylistFragment : Fragment(), ListTrackAdapter.Clickable {
 
     private lateinit var binding: FragmentPlaylistBinding
 
-    private val playlistViewModel: PlaylistViewModel by viewModels { PlaylistViewModel.Factory }
+    private val playlistViewModel: PlaylistViewModel by viewModel<PlaylistViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

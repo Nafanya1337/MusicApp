@@ -1,9 +1,7 @@
 package com.example.musicapp.presentation.account
 
 import android.content.Context
-import androidx.fragment.app.viewModels
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -16,14 +14,11 @@ import com.example.musicapp.MusicApp
 import com.example.musicapp.R
 import com.example.musicapp.THEME_PREFERENCES
 import com.example.musicapp.databinding.FragmentAccountBinding
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class AccountFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = AccountFragment()
-    }
-
-    private val viewModel: AccountViewModel by viewModels { AccountViewModel.Factory }
+    private val viewModel by viewModel<AccountViewModel>()
 
     lateinit var binding: FragmentAccountBinding
 

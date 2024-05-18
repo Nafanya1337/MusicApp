@@ -11,23 +11,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AccountViewModel(private val signOutUseCase: SignOutUseCase) : ViewModel() {
-
     fun signOut() {
         viewModelScope.launch(Dispatchers.IO) {
             signOutUseCase.execute()
         }
     }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val signOutUseCase =
-                    SignOutUseCase((this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MusicApp).firebaseRepositoryImpl)
-                AccountViewModel(
-                    signOutUseCase
-                )
-            }
-        }
-    }
-
 }

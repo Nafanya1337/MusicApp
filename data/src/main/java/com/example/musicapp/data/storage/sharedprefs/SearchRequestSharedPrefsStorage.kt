@@ -6,8 +6,8 @@ import com.example.musicapp.data.storage.interfaces.SearchRequestStorage
 import com.example.musicapp.data.storage.models.SearchRequest
 
 
-private val SEARCH_PREFERENCES = "search"
-private val SEARCH_HISTORY_KEY = "search_history"
+private const val SEARCH_PREFERENCES = "search"
+private const val SEARCH_HISTORY_KEY = "search_history"
 
 class SearchRequestSharedPrefsStorage(context: Context) : SearchRequestStorage {
 

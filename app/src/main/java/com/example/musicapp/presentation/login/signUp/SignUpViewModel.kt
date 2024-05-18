@@ -30,20 +30,4 @@ class SignUpViewModel(private val signUpUseCase: SignUpUseCase): ViewModel() {
 
     private fun validateData(email: String) = Patterns.EMAIL_ADDRESS.matcher(email).matches()
 
-
-    companion object {
-
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val signUpUseCase = SignUpUseCase(
-                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MusicApp).firebaseRepositoryImpl
-                )
-                SignUpViewModel(
-                    signUpUseCase
-                )
-            }
-        }
-
-    }
-
 }
