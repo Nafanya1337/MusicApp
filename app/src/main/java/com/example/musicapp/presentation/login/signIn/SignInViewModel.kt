@@ -8,9 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.musicapp.MusicApp
-import com.example.musicapp.data.repository.login.LoginRepositoryImpl
 import com.example.musicapp.domain.usecase.login.SignInUseCase
-import com.example.musicapp.presentation.playlist.PlaylistViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -37,7 +35,7 @@ class SignInViewModel(private val signInUseCase: SignInUseCase): ViewModel() {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val signInUseCase = SignInUseCase(
-                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MusicApp).loginRepositoryImpl
+                    (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MusicApp).firebaseRepositoryImpl
                 )
                 SignInViewModel(
                     signInUseCase

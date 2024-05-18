@@ -152,8 +152,7 @@ object ToDomainUtil {
             id = this.id,
             name = this.name,
             share = this.share,
-            picture = this.picture,
-            tracklist = this.tracklist
+            picture = this.picture
         )
     }
 

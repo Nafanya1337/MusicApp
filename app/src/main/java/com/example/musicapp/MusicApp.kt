@@ -1,15 +1,18 @@
 package com.example.musicapp
 
-import AuthStorageImpl
+import FirebaseStorageImpl
 import android.app.Application
+import android.content.Context
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.MutableLiveData
 import com.example.musicapp.data.remote.interfaces.MusicApi
 import com.example.musicapp.data.repository.PlaylistRepositoryImpl
 import com.example.musicapp.data.repository.artist.ArtistRepositoryImpl
-import com.example.musicapp.data.repository.login.LoginRepositoryImpl
+import com.example.musicapp.data.repository.login.FirebaseRepositoryImpl
 import com.example.musicapp.data.repository.search.SearchRequestRepositoryImpl
 import com.example.musicapp.data.repository.track.TrackRepositoryImpl
 import com.example.musicapp.data.storage.sharedprefs.SearchRequestSharedPrefsStorage
+import com.example.musicapp.domain.models.Playlistable
 import com.example.musicapp.domain.models.login.User
 import com.google.firebase.FirebaseApp
 import okhttp3.OkHttpClient
@@ -18,10 +21,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 
+const val THEME_PREFERENCES = "theme"
+const val DARK_THEME_ENABLED_KEY = "isDarkThemeEnabled"
+
 class MusicApp : Application() {
 
     companion object {
         var user = MutableLiveData<User?>()
+        val userFav = MutableLiveData<MutableList<Playlistable>>()
     }
 
     public lateinit var musicApi: MusicApi
@@ -51,16 +58,19 @@ class MusicApp : Application() {
         )
     }
 
-    val loginRepositoryImpl by lazy {
-        LoginRepositoryImpl(
-            authStorage = AuthStorageImpl()
+    val firebaseRepositoryImpl by lazy {
+        FirebaseRepositoryImpl(
+            firebaseStorage = FirebaseStorageImpl()
         )
     }
 
     override fun onCreate() {
         super.onCreate()
         configureRetrofit()
-//        applyTheme()
+        val sharedPreferences = getSharedPreferences(THEME_PREFERENCES, Context.MODE_PRIVATE)
+        val isDarkThemeEnabled = sharedPreferences.getBoolean(DARK_THEME_ENABLED_KEY, false)
+
+        applyTheme(isDarkThemeEnabled)
         FirebaseApp.initializeApp(this)
     }
 
@@ -86,14 +96,13 @@ class MusicApp : Application() {
         musicApi = retrofit.create(MusicApi::class.java)
     }
 
-//    fun applyTheme() {
-//        val isDarkTheme = this.darkThemeIsChecked()
-//        val mode = if (isDarkTheme) {
-//            AppCompatDelegate.MODE_NIGHT_YES
-//        } else {
-//            AppCompatDelegate.MODE_NIGHT_NO
-//        }
-//        AppCompatDelegate.setDefaultNightMode(mode)
-//    }
+    fun applyTheme(isDarkThemeEnabled: Boolean) {
+        val mode = if (isDarkThemeEnabled) {
+            AppCompatDelegate.MODE_NIGHT_YES
+        } else {
+            AppCompatDelegate.MODE_NIGHT_NO
+        }
+        AppCompatDelegate.setDefaultNightMode(mode)
+    }
 
 }

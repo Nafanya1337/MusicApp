@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.musicapp.R
 import com.example.musicapp.data.utils.RoundedCornersTransformation
+import com.example.musicapp.databinding.ArtistRoundCircleHorizontalBinding
+import com.example.musicapp.databinding.PlaylistLayoutBinding
 import com.example.musicapp.domain.models.ContributorsVO
 
 class ArtistsAdapter(
@@ -20,15 +22,15 @@ class ArtistsAdapter(
         fun onItemClick(artist: ContributorsVO)
     }
 
-    inner class ArtistView(view: View) : RecyclerView.ViewHolder(view) {
-        val image = view.findViewById<ImageView>(R.id.roundedArtistImage)
-        val button = view.findViewById<Button>(R.id.roundedArtistButton)
-    }
+    inner class ArtistView(val binding: ArtistRoundCircleHorizontalBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ArtistView {
-        val item = LayoutInflater.from(parent.context.applicationContext)
-            .inflate(R.layout.artist_round_circle_horizontal, parent, false)
-        return ArtistView(item)
+        val binding = ArtistRoundCircleHorizontalBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return ArtistView(binding)
     }
 
     override fun getItemCount(): Int {
@@ -37,9 +39,9 @@ class ArtistsAdapter(
 
     override fun onBindViewHolder(holder: ArtistView, position: Int) {
         val artist = artists[position]
-        holder.button.text = artist.name
+        holder.binding.roundedArtistButton.text = artist.name
 
-        holder.button.setOnClickListener {
+        holder.binding.roundedArtistButton.setOnClickListener {
             clickable.onItemClick(artist)
         }
 
@@ -59,7 +61,7 @@ class ArtistsAdapter(
             .with(holder.itemView)
             .load(artist.picture)
             .transform(RoundedCornersTransformation(80))
-            .into(holder.image)
+            .into(holder.binding.roundedArtistImage)
     }
 
 }

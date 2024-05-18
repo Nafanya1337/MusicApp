@@ -15,31 +15,7 @@
 
         <KeyFrameSet>
 
-            <!-- кнопка button_delete выезжает -->
-            <KeyAttribute
-                motion:motionTarget="@id/button_delete"
-                motion:framePosition="50"
-                android:translationX="-50dp"
-                android:alpha="0"/>
-            <KeyAttribute
-                motion:motionTarget="@id/button_delete"
-                motion:framePosition="100"
-                android:translationX="0dp"
-                android:alpha="1"/>
 
-            <!-- кнопка button_settings выезжает -->
-            <KeyAttribute
-                motion:motionTarget="@id/button_settings"
-                motion:framePosition="50"
-                android:translationX="50dp"
-                android:alpha="0"/>
-            <KeyAttribute
-                motion:motionTarget="@id/button_settings"
-                motion:framePosition="100"
-                android:translationX="0dp"
-                android:alpha="1"/>
-
-            <!-- trackProgressBar постепенно расширяется из середины -->
             <KeyAttribute
                 motion:motionTarget="@id/trackProgressBar"
                 motion:framePosition="80"
@@ -51,7 +27,7 @@
                 android:scaleX="1"
                 android:alpha="1"/>
 
-            <!-- Таймеры появляются над trackProgressBar -->
+
             <KeyAttribute
                 motion:motionTarget="@id/fullscreen_trackLength"
                 motion:framePosition="85"
@@ -70,7 +46,7 @@
                 motion:framePosition="100"
                 android:alpha="1"/>
 
-            <!-- Органы управления button_previous и button_next выезжают из кнопки паузы и проигрывания -->
+
             <KeyAttribute
                 motion:motionTarget="@id/button_previous"
                 motion:framePosition="50"
@@ -93,31 +69,13 @@
                 android:translationX="0dp"
                 android:alpha="1"/>
 
-            <!-- Остальные кнопки появляются -->
+
             <KeyAttribute
                 motion:motionTarget="@id/button_like"
                 motion:framePosition="50"
                 android:alpha="0"/>
             <KeyAttribute
                 motion:motionTarget="@id/button_like"
-                motion:framePosition="100"
-                android:alpha="1"/>
-
-            <KeyAttribute
-                motion:motionTarget="@id/button_remesh"
-                motion:framePosition="50"
-                android:alpha="0"/>
-            <KeyAttribute
-                motion:motionTarget="@id/button_remesh"
-                motion:framePosition="100"
-                android:alpha="1"/>
-
-            <KeyAttribute
-                motion:motionTarget="@id/button_loop"
-                motion:framePosition="50"
-                android:alpha="0"/>
-            <KeyAttribute
-                motion:motionTarget="@id/button_loop"
                 motion:framePosition="100"
                 android:alpha="1"/>
         </KeyFrameSet>
@@ -256,34 +214,15 @@
             motion:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="10dp"/>
 
+
         <Constraint
-            android:id="@id/button_settings"
+            android:id="@id/buttonLoop"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:layout_marginEnd="10dp"
             android:visibility="visible"
-            motion:layout_constraintEnd_toEndOf="parent"
-            motion:layout_constraintTop_toTopOf="@id/currentTrack_trackName"
-            motion:layout_constraintBottom_toBottomOf="@id/currentTrack_artistName" />
-
-        <Constraint
-            android:id="@id/button_remesh"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
             android:layout_marginStart="10dp"
-            android:visibility="visible"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toTopOf="@id/currentTrack_PlayPauseIcon"
-            motion:layout_constraintBottom_toTopOf="@id/button_loop" />
-
-        <Constraint
-            android:id="@id/button_loop"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="10dp"
-            android:visibility="visible"
-            motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toBottomOf="@id/button_remesh"
             motion:layout_constraintBottom_toBottomOf="@id/currentTrack_PlayPauseIcon"
             motion:layout_constraintVertical_chainStyle="spread_inside"/>
 
@@ -310,16 +249,6 @@
             motion:layout_constraintEnd_toEndOf="@+id/playlist_name"
             motion:layout_constraintStart_toStartOf="@+id/playlist_name"
             motion:layout_constraintBottom_toTopOf="@+id/playlist_name"/>
-
-        <Constraint
-            android:id="@id/button_delete"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:visibility="visible"
-            android:layout_marginStart="10dp"
-            motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toTopOf="@id/currentTrack_trackName"
-            motion:layout_constraintBottom_toBottomOf="@id/currentTrack_artistName" />
 
         <Constraint
             android:id="@id/bottom_navigation_menu"

@@ -1,9 +1,9 @@
 package com.example.musicapp.domain.usecase.login
 
-import com.example.musicapp.domain.repository.LoginRepository
+import com.example.musicapp.domain.repository.FirebaseRepository
 
-class SignInUseCase(private val loginRepository: LoginRepository) {
+class SignInUseCase(private val firebaseRepository: FirebaseRepository) {
     suspend fun execute(email: String, password: String, callback: (Boolean) -> Unit) {
-        loginRepository.signIn(email = email, password = password, callback = callback)
+        firebaseRepository.signIn(email = email, password = password, callback = callback)
     }
 }

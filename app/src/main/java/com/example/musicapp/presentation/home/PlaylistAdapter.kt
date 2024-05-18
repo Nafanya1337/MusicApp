@@ -9,21 +9,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.musicapp.R
 import com.example.musicapp.data.utils.RoundedCornersTransformation
+import com.example.musicapp.databinding.PlaylistHeaderBinding
+import com.example.musicapp.databinding.PlaylistLayoutBinding
 import com.example.musicapp.domain.models.home.RadioVO
 
 class PlaylistAdapter(var playlistList: List<RadioVO>, val clickable: Clickable) :
     RecyclerView.Adapter<PlaylistAdapter.PlaylistViewHolder>() {
 
-    inner class PlaylistViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val playlistImage = itemView.findViewById<ImageView>(R.id.playlistImage)
-        val playlistName = itemView.findViewById<TextView>(R.id.playlistName)
-        val playlistArtist = itemView.findViewById<TextView>(R.id.playlistArtist)
-    }
+    inner class PlaylistViewHolder(val binding: PlaylistLayoutBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlaylistViewHolder {
-        val item = LayoutInflater.from(parent.context.applicationContext)
-            .inflate(R.layout.playlist_layout, parent, false)
-        return PlaylistViewHolder(item)
+        val binding = PlaylistLayoutBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
+        return PlaylistViewHolder(binding)
     }
 
     interface Clickable {
@@ -35,16 +36,16 @@ class PlaylistAdapter(var playlistList: List<RadioVO>, val clickable: Clickable)
     override fun onBindViewHolder(holder: PlaylistViewHolder, position: Int) {
         val playlist = playlistList[position]
         if (playlist.contributor != null) {
-            holder.playlistArtist.text =
+            holder.binding.playlistArtist.text =
                 playlist.contributor!!.joinToString(separator = ", ") { it.name }
         } else {
-            holder.playlistArtist.visibility = View.GONE
+            holder.binding.playlistArtist.visibility = View.GONE
         }
-        holder.playlistName.text = playlist.title
+        holder.binding.playlistName.text = playlist.title
         Glide.with(holder.itemView)
             .load(playlist.picture)
             .transform(RoundedCornersTransformation(20))
-            .into(holder.playlistImage)
+            .into(holder.binding.playlistImage)
 
         holder.itemView.setOnClickListener {
             clickable.onItemClicked(playlist)

@@ -1,11 +1,12 @@
 package com.example.musicapp.domain.usecase.track
 
-import com.example.musicapp.domain.repository.TrackRepository
+import com.example.musicapp.domain.models.TrackVO
+import com.example.musicapp.domain.repository.FirebaseRepository
 
-class AddTrackToFavouritesUseCase(private val trackRepository: TrackRepository) {
+class AddTrackToFavouritesUseCase(private val firebaseRepository: FirebaseRepository) {
 
-    fun execute(id: Long) {
-        trackRepository.addToFavourites(id = id)
+    suspend fun execute(uid: String, track: TrackVO, callback: (Boolean) -> Unit) {
+        firebaseRepository.addTrackToFavourites(uid = uid, track = track, callback = callback)
     }
 
 }

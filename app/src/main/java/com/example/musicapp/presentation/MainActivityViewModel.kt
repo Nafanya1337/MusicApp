@@ -1,7 +1,5 @@
 package com.example.musicapp.presentation
 
-import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -9,18 +7,26 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.musicapp.MusicApp
-import com.example.musicapp.MusicApp.Companion.user
+import com.example.musicapp.MusicApp.Companion.userFav
 import com.example.musicapp.data.repository.track.TrackRepositoryImpl
 import com.example.musicapp.domain.models.CurrentTrackVO
 import com.example.musicapp.domain.models.TrackListVO
+import com.example.musicapp.domain.models.TrackVO
+import com.example.musicapp.domain.models.artist.ArtistVO
 import com.example.musicapp.domain.models.login.User
 import com.example.musicapp.domain.usecase.login.GetCurrentUserUseCase
+import com.example.musicapp.domain.usecase.track.AddTrackToFavouritesUseCase
+import com.example.musicapp.domain.usecase.track.DeleteFromFavouriteUseCase
+import com.example.musicapp.domain.usecase.track.GetFavouritesUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivityViewModel(
     private val trackRepositoryImpl: TrackRepositoryImpl,
-    private val getCurrentUserUseCase: GetCurrentUserUseCase
+    private val getCurrentUserUseCase: GetCurrentUserUseCase,
+    private val addTrackToFavouritesUseCase: AddTrackToFavouritesUseCase,
+    private val getFavouritesUseCase: GetFavouritesUseCase,
+    private val deleteFromFavouriteUseCase: DeleteFromFavouriteUseCase
 ) : ViewModel() {
 
     val track = MutableLiveData<CurrentTrackVO?>(null)
@@ -29,14 +35,51 @@ class MainActivityViewModel(
     val currentPosition = MutableLiveData<Int>()
     val nextButtonEnabled = MutableLiveData<Boolean>()
     val prevButtonEnabled = MutableLiveData<Boolean>()
-    val isRemeshing = MutableLiveData<Boolean>(false)
-    val setOfPositions = mutableSetOf<Int>()
+    val looping = MutableLiveData<LoopinType>(LoopinType.NONE)
+    val user = MutableLiveData<User?>()
+
 
     fun updateButtonStates() {
         val playlist = currentPlaylist.value?.list
         val position = currentPosition.value ?: 0
         nextButtonEnabled.value = position < (playlist?.size?.minus(1) ?: 0)
         prevButtonEnabled.value = position != 0
+    }
+
+    fun addToFav(callback: (Boolean) -> Unit) {
+        val uid = user.value?.id
+        val track = track.value?.toTrackVO()
+        if (uid != null && track != null) {
+            viewModelScope.launch(Dispatchers.IO) {
+                addTrackToFavouritesUseCase.execute(uid = uid, track = track) {
+                    if (it) {
+                        getFav()
+                    }
+                    callback(it)
+                }
+            }
+        }
+    }
+
+    fun changeLoopingType() {
+        looping.value?.let {
+            this.looping.value = it.nextLoopType()
+        }
+    }
+
+    fun deleteFromFav(callback: (Boolean) -> Unit) {
+        val uid = user.value?.id
+        val track = track.value?.toTrackVO()
+        if (uid != null && track != null) {
+            viewModelScope.launch(Dispatchers.IO) {
+                deleteFromFavouriteUseCase.execute(uid = uid, trackId = track.id) {
+                    if (it) {
+                        getFav()
+                    }
+                    callback(it)
+                }
+            }
+        }
     }
 
     suspend fun playTrack(id: Long) {
@@ -55,27 +98,29 @@ class MainActivityViewModel(
         isPlaying.value = !isPlaying.value!!
     }
 
-    fun setCurrentTrackList(trackList: TrackListVO){
+    fun setCurrentTrackList(trackList: TrackListVO) {
         currentPlaylist.value = trackList
     }
 
-    fun setCurrentPosition(position: Int){
+    fun setCurrentPosition(position: Int) {
         currentPosition.value = position
-        if (isRemeshing.value == true)
-            setOfPositions.add(position)
         updateButtonStates()
     }
 
-    fun nextPosition(){
-        if (!isRemeshing.value!!) {
-            if (currentPosition.value != currentPlaylist.value?.list?.size?.minus(1))
-                currentPosition.value?.plus(1)?.let { this.setCurrentPosition(it) }
-            else
-                playPause()
+    fun autoNextPosition() {
+        when (looping.value) {
+            LoopinType.NONE -> nextPositionByClick()
+            LoopinType.TRACK -> setCurrentPosition(currentPosition.value!!)
+            LoopinType.PLAYLIST -> setCurrentPosition(0)
+            null -> {}
         }
-        else {
+    }
 
-        }
+    fun nextPositionByClick() {
+        if (currentPosition.value != currentPlaylist.value?.list?.size?.minus(1))
+            currentPosition.value?.plus(1)?.let { this.setCurrentPosition(it) }
+        else
+            playPause()
     }
 
     fun prevPosition() {
@@ -83,14 +128,20 @@ class MainActivityViewModel(
             currentPosition.value?.minus(1)?.let { this.setCurrentPosition(it) }
     }
 
-    val user = MutableLiveData<User?>()
-
     fun getUser() {
         viewModelScope.launch(Dispatchers.IO) {
             getCurrentUserUseCase.execute { data ->
-                Log.d("mymy", data.toString())
                 this@MainActivityViewModel.user.postValue(data)
             }
+        }
+    }
+
+    fun getFav() {
+        viewModelScope.launch(Dispatchers.IO) {
+            userFav.postValue(user.value?.id?.let {
+                getFavouritesUseCase.execute(it)
+                    .toMutableList()
+            })
         }
     }
 
@@ -101,15 +152,56 @@ class MainActivityViewModel(
                     (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MusicApp).trackRepositoryImpl
 
                 val getCurrentUserUseCase =
-                    GetCurrentUserUseCase((this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MusicApp).loginRepositoryImpl)
+                    GetCurrentUserUseCase((this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MusicApp).firebaseRepositoryImpl)
+
+                val addTrackToFavouritesUseCase =
+                    AddTrackToFavouritesUseCase((this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MusicApp).firebaseRepositoryImpl)
+
+                val getFavouritesUseCase =
+                    GetFavouritesUseCase((this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MusicApp).firebaseRepositoryImpl)
+
+                val dedeleteFromFavouriteUseCase =
+                    DeleteFromFavouriteUseCase((this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MusicApp).firebaseRepositoryImpl)
 
                 MainActivityViewModel(
                     trackRepositoryImpl,
-                    getCurrentUserUseCase
+                    getCurrentUserUseCase,
+                    addTrackToFavouritesUseCase,
+                    getFavouritesUseCase,
+                    dedeleteFromFavouriteUseCase
                 )
             }
         }
     }
 
+    fun CurrentTrackVO.toTrackVO(): TrackVO {
+        return TrackVO(
+            id = this.id,
+            title = this.title,
+            explicitLyrics = this.explicitLyrics,
+            preview = this.preview,
+            artist = ArtistVO(
+                id = this.contributors[0].id,
+                name = this.contributors[0].name,
+                share = null,
+                picture = this.contributors[0].picture
+            ),
+            album = this.album,
+            position = null
+        )
+    }
 
+    enum class LoopinType {
+        NONE,
+        TRACK,
+        PLAYLIST;
+
+        fun nextLoopType(): LoopinType {
+            return when (this) {
+                NONE -> PLAYLIST
+                PLAYLIST -> TRACK
+                TRACK -> NONE
+            }
+        }
+    }
 }

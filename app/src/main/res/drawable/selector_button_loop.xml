@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <item android:drawable="@drawable/loop_button_passive" android:state_checked="false"/>
-    <item android:drawable="@drawable/loop_button_active_all" android:state_checked="true" android:state_single="false"/>
     <item android:drawable="@drawable/loop_button_active_current" android:state_checked="true" android:state_single="true"/>
-
+    <item android:drawable="@drawable/loop_button_active_all" android:state_checked="true" android:state_single="false"/>
+    <item android:drawable="@drawable/loop_button_passive" android:state_checked="false"/>
 </selector>
+

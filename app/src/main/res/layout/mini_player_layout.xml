@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.musicapp.presentation.utils.SingleViewTouchableMotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.musicapp.presentation.utils.SingleViewTouchableMotionLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
     app:layoutDescription="@xml/mini_player_layout_scene2"
     tools:ignore="contentDescription">
 
@@ -35,9 +35,7 @@
         style="@style/TrackName"
         android:layout_width="wrap_content"
         android:layout_marginStart="10dp"
-        android:ellipsize="marquee"
         android:fadingEdge="horizontal"
-        android:marqueeRepeatLimit="marquee_forever"
         android:maxWidth="180dp"
         android:text="Songname"
         app:layout_constraintBottom_toTopOf="@id/currentTrack_artistName"
@@ -158,46 +156,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/currentTrack_PlayPauseIcon" />
 
-    <ImageView
-        android:id="@+id/button_delete"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:src="@drawable/selector_button_download"
+    <ImageButton
         android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@id/currentTrack_trackName"
-        app:layout_constraintTop_toTopOf="@id/currentTrack_trackName"
-        app:layout_constraintBottom_toBottomOf="@id/currentTrack_artistName" />
-
-    <ImageView
-        android:id="@+id/button_settings"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:src="@drawable/more_button"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/currentTrack_trackName"
-        app:layout_constraintBottom_toBottomOf="@id/currentTrack_artistName" />
-
-    <ImageView
-        android:id="@+id/button_remesh"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:src="@drawable/selector_button_remesh"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/currentTrack_PlayPauseIcon"
-        app:layout_constraintBottom_toTopOf="@id/button_loop"/>
-
-    <ImageView
-        android:id="@+id/button_loop"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:src="@drawable/selector_button_loop"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_remesh"
+        android:id="@+id/buttonLoop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="@id/currentTrack_PlayPauseIcon"
-        app:layout_constraintVertical_chainStyle="spread_inside"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/currentTrack_PlayPauseIcon" />
 
     <TextView
         android:id="@+id/now_playing_Header"

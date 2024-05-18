@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.SeekBar
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.annotation.RequiresApi
 import androidx.core.net.toUri
@@ -15,12 +17,13 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.Player
 import androidx.media3.session.MediaController
+import androidx.media3.session.SessionCommand
 import androidx.media3.session.SessionToken
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.musicapp.MusicApp.Companion.user
+import com.example.musicapp.MusicApp.Companion.userFav
 import com.example.musicapp.data.remote.models.ContributorsDTO
 import com.example.musicapp.data.utils.RoundedCornersTransformation
 import com.example.musicapp.databinding.ActivityMainBinding
@@ -28,7 +31,7 @@ import com.example.musicapp.domain.models.ContributorsVO
 import com.example.musicapp.domain.models.CurrentTrackVO
 import com.example.musicapp.domain.models.TrackListVO
 import com.example.musicapp.domain.models.TrackVO
-import com.example.musicapp.domain.models.login.User
+import com.example.musicapp.domain.models.artist.ArtistVO
 import com.example.musicapp.presentation.MainActivityViewModel
 import com.example.musicapp.presentation.artist.ArtistsBottomSheetFragment
 import com.example.musicapp.presentation.artist.CONTRIBUTORS_CHOOSE_KEY
@@ -84,12 +87,32 @@ class MainActivity : AppCompatActivity() {
                 navController.navigate(R.id.action_homeFragment_to_auth_nav_graph)
             } else {
                 MusicApp.user.value = data
+                mainActivityViewModel.getFav()
                 initUI()
             }
         }
+
+        binding.miniPlayerLayout.buttonLoop.setOnClickListener {
+            mainActivityViewModel.changeLoopingType()
+        }
+
+        mainActivityViewModel.looping.observe(this) { type ->
+            when (type) {
+                MainActivityViewModel.LoopinType.NONE -> {
+                    binding.miniPlayerLayout.buttonLoop.setBackgroundResource(R.drawable.loop_button_passive)
+                }
+                MainActivityViewModel.LoopinType.TRACK -> {
+                    binding.miniPlayerLayout.buttonLoop.setBackgroundResource(R.drawable.loop_button_active_current)
+                }
+                MainActivityViewModel.LoopinType.PLAYLIST -> {
+                    binding.miniPlayerLayout.buttonLoop.setBackgroundResource(R.drawable.loop_button_active_all)
+                }
+            }
+            binding.miniPlayerLayout.buttonLoop.refreshDrawableState()
+        }
     }
 
-    fun initUser(){
+    fun initUser() {
         mainActivityViewModel.getUser()
     }
 
@@ -99,7 +122,7 @@ class MainActivity : AppCompatActivity() {
         mainActivityViewModel.setCurrentPosition(position)
     }
 
-    private fun initUI(){
+    private fun initUI() {
 
         binding.miniPlayerLayout.root.visibility = View.VISIBLE
 
@@ -110,8 +133,25 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
-        binding.miniPlayerLayout.currentTrackTrackName.isSelected = true
+        binding.miniPlayerLayout.trackProgressBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    val controller = controllerFuture.get() as? MediaController
+                    controller?.let {
+                        val position = it.duration * progress / 100
+                        it.seekTo(position)
+                    }
+                }
+            }
 
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                
+            }
+        })
 
         mainActivityViewModel.nextButtonEnabled.observe(this) { isEnabled ->
             binding.miniPlayerLayout.buttonNext.isEnabled = isEnabled
@@ -122,22 +162,61 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.miniPlayerLayout.buttonNext.setOnClickListener {
-            mainActivityViewModel.nextPosition()
+            mainActivityViewModel.nextPositionByClick()
         }
 
         binding.miniPlayerLayout.buttonPrevious.setOnClickListener {
             mainActivityViewModel.prevPosition()
         }
 
+        binding.miniPlayerLayout.buttonLike.setOnClickListener {
+            if (!it.isSelected) {
+                mainActivityViewModel.addToFav {
+                    if (!it) {
+                        Toast.makeText(this, "Error when adding to favourites", Toast.LENGTH_SHORT)
+                            .show()
+
+                    } else {
+                        Toast.makeText(this, "added", Toast.LENGTH_SHORT).show()
+                        binding.miniPlayerLayout.buttonLike.isSelected =
+                            !binding.miniPlayerLayout.buttonLike.isSelected
+                    }
+                }
+            } else {
+                mainActivityViewModel.deleteFromFav {
+                    if (!it) {
+                        Toast.makeText(
+                            this,
+                            "Error when deleting to favourites",
+                            Toast.LENGTH_SHORT
+                        )
+                            .show()
+                    } else {
+                        Toast.makeText(this, "deleted", Toast.LENGTH_SHORT).show()
+                        binding.miniPlayerLayout.buttonLike.isSelected =
+                            !binding.miniPlayerLayout.buttonLike.isSelected
+                    }
+                }
+            }
+        }
+
 
         binding.miniPlayerLayout.currentTrackArtistName.setOnClickListener {
             val artists: List<ContributorsVO> = mainActivityViewModel.track.value!!.contributors
-            val bottomSheetFragment: ArtistsBottomSheetFragment = ArtistsBottomSheetFragment.newInstance(artists)
-            supportFragmentManager.setFragmentResultListener(CONTRIBUTORS_CHOOSE_KEY, this) { key, bundle ->
+            val bottomSheetFragment: ArtistsBottomSheetFragment =
+                ArtistsBottomSheetFragment.newInstance(artists)
+            supportFragmentManager.setFragmentResultListener(
+                CONTRIBUTORS_CHOOSE_KEY,
+                this
+            ) { key, bundle ->
                 val contributor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                     bundle.getParcelable(CONTRIBUTORS_REQUEST_KEY, ContributorsDTO::class.java)
                 } else {
-                    ContributorsDTO(27,"Daft Punk", "https://e-cdns-images.dzcdn.net/images/artist/f2bc007e9133c946ac3c3907ddc5d2ea/500x500-000000-80-0-0.jpg")
+                    ContributorsDTO(
+                        27,
+                        "Daft Punk",
+                        "https://e-cdns-images.dzcdn.net/images/artist/f2bc007e9133c946ac3c3907ddc5d2ea/500x500-000000-80-0-0.jpg"
+                    )
                 }
                 contributor?.let { it1 -> openArtistProfile(it1) }
                 binding.miniPlayerLayout.root.transitionToStart()
@@ -146,7 +225,11 @@ class MainActivity : AppCompatActivity() {
         }
 
         mainActivityViewModel.track.observe(this) { track ->
-            if (track != null) changeTrack(track)
+            if (track != null) {
+                changeTrack(track)
+                binding.miniPlayerLayout.buttonLike.isSelected =
+                    userFav.value!!.contains(track.toTrackVO())
+            }
 
             binding.miniPlayerLayout.currentTrackTrackName.isSelected =
                 binding.miniPlayerLayout.currentTrackTrackName.width >= 140
@@ -193,10 +276,10 @@ class MainActivity : AppCompatActivity() {
                                 .build()
                         ).build()
 
-                    // Get the MediaController instance from the future
+
                     val controller = controllerFuture.get() as? MediaController
 
-                    // Switch to the main thread to interact with MediaController
+
                     withContext(Dispatchers.Main) {
                         controller?.let {
                             it.setMediaItem(mediaItem)
@@ -229,6 +312,10 @@ class MainActivity : AppCompatActivity() {
         initPlayer()
     }
 
+    fun hidePlayer(){
+        binding.miniPlayerLayout.root.visibility = View.GONE
+    }
+
     private fun initPlayer() {
         controllerFuture.addListener({
             val controller = controllerFuture.get() as? MediaController
@@ -236,7 +323,7 @@ class MainActivity : AppCompatActivity() {
                 it.addListener(object : Player.Listener {
                     override fun onPlaybackStateChanged(state: Int) {
                         if (state == Player.STATE_ENDED) {
-                            mainActivityViewModel.nextPosition()
+                            mainActivityViewModel.autoNextPosition()
                         }
                     }
                 })
@@ -250,7 +337,10 @@ class MainActivity : AppCompatActivity() {
         binding.miniPlayerLayout.currentTrackArtistName.text =
             currentTrackVO.contributors.joinToString(separator = ", ") { it.name }
 
-        Log.d("mymy", binding.miniPlayerLayout.currentTrackExplicitContentIcon.visibility.toString())
+        Log.d(
+            "mymy",
+            binding.miniPlayerLayout.currentTrackExplicitContentIcon.visibility.toString()
+        )
         Glide
             .with(binding.miniPlayerLayout.root)
             .load(currentTrackVO.album.picture)
@@ -271,10 +361,10 @@ class MainActivity : AppCompatActivity() {
                 val currentPosition = controller?.currentPosition ?: 0
                 val duration = controller?.duration ?: 1
                 val progress = if (duration > 0) (currentPosition * 100 / duration).toInt() else 0
-                binding.miniPlayerLayout.trackProgressBar.progress =
-                    progress
-                binding.miniPlayerLayout.fullscreenCurrentPosition.text =
-                    formatTime(currentPosition)
+                withContext(Dispatchers.Main) {
+                    binding.miniPlayerLayout.trackProgressBar.progress = progress
+                    binding.miniPlayerLayout.fullscreenCurrentPosition.text = formatTime(currentPosition)
+                }
                 delay(1000)
             }
         }
@@ -294,3 +384,19 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
+fun CurrentTrackVO.toTrackVO(): TrackVO {
+    return TrackVO(
+        id = this.id,
+        title = this.title,
+        explicitLyrics = this.explicitLyrics,
+        preview = this.preview,
+        artist = ArtistVO(
+            id = this.contributors[0].id,
+            name = this.contributors[0].name,
+            share = null,
+            picture = this.contributors[0].picture
+        ),
+        album = this.album,
+        position = null
+    )
+}

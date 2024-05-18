@@ -1,6 +1,8 @@
 import android.net.Uri
 import android.util.Log
-import com.example.musicapp.data.storage.interfaces.AuthStorage
+import com.example.musicapp.data.remote.models.TrackDTO
+import com.example.musicapp.domain.models.Playlistable
+import com.example.musicapp.domain.models.TrackVO
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -9,7 +11,6 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -18,11 +19,12 @@ import java.util.UUID
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class AuthStorageImpl : AuthStorage {
+class FirebaseStorageImpl :
+    com.example.musicapp.data.storage.interfaces.FirebaseStorage {
 
     private val auth by lazy { FirebaseAuth.getInstance() }
     private val database by lazy { FirebaseDatabase.getInstance() }
-    private val storage by lazy { FirebaseStorage.getInstance() }
+    private val storage by lazy { com.google.firebase.storage.FirebaseStorage.getInstance() }
 
     override suspend fun signUp(email: String, password: String, nickname: String, imageUri: Uri, callback: (Boolean) -> Unit) {
         withContext(Dispatchers.IO) {
@@ -93,6 +95,73 @@ class AuthStorageImpl : AuthStorage {
             null
         }
     }
+
+    override suspend fun getUserFavourites(uid: String): List<TrackVO> {
+        return suspendCoroutine { continuation ->
+            database.getReference("users").child(uid).child("favourites")
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val favourites = mutableListOf<TrackVO>()
+                        for (childSnapshot in snapshot.children) {
+                            val favourite = childSnapshot.getValue(TrackVO::class.java)
+                            if (favourite != null) {
+                                favourites.add(favourite)
+                            }
+                        }
+                        continuation.resume(favourites)
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.w(TAG, "Failed to read favourites.", error.toException())
+                        continuation.resume(emptyList())
+                    }
+                })
+        }
+    }
+
+    override suspend fun addToFavourites(uid: String, track: TrackVO, callback: (Boolean) -> Unit) {
+        val trackRef = database.getReference("users").child(uid).child("favourites").push()
+        trackRef.setValue(track).addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                callback(true)
+            } else {
+                callback(false)
+            }
+        }
+    }
+
+    override suspend fun deleteFromFavourites(uid: String, trackId: Long, callback: (Boolean) -> Unit) {
+        val favouritesRef = database.getReference("users").child(uid).child("favourites")
+        favouritesRef.orderByChild("id").equalTo(trackId.toDouble())
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        var success = true
+                        var pendingTasks = snapshot.childrenCount.toInt()
+
+                        for (childSnapshot in snapshot.children) {
+                            childSnapshot.ref.removeValue().addOnCompleteListener { task ->
+                                if (!task.isSuccessful) {
+                                    success = false
+                                }
+                                pendingTasks--
+                                if (pendingTasks == 0) {
+                                    callback(success)
+                                }
+                            }
+                        }
+                    } else {
+                        callback(false) // No matching items found
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.w(TAG, "Failed to delete from favourites.", error.toException())
+                    callback(false)
+                }
+            })
+    }
+
 
     override fun setUserImage(uid: String, imageUri: String) {
         val randomKey = UUID.randomUUID().toString()

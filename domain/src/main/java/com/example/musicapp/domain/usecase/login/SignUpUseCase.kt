@@ -1,10 +1,10 @@
 package com.example.musicapp.domain.usecase.login
 
-import com.example.musicapp.domain.repository.LoginRepository
+import com.example.musicapp.domain.repository.FirebaseRepository
 
 
-class SignUpUseCase (private val loginRepository: LoginRepository) {
+class SignUpUseCase (private val firebaseRepository: FirebaseRepository) {
     suspend fun execute(email: String, password: String, nickname: String, imageUri: String, callback: (Boolean) -> Unit) {
-        loginRepository.signUp(email = email, password = password, nickname = nickname, imageUri = imageUri, callback = callback)
+        firebaseRepository.signUp(email = email, password = password, nickname = nickname, imageUri = imageUri, callback = callback)
     }
 }

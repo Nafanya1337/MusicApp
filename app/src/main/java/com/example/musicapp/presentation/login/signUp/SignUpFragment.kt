@@ -21,7 +21,7 @@ class SignUpFragment : Fragment() {
 
     val signUpViewModel by viewModels<SignUpViewModel> { SignUpViewModel.Factory }
 
-    private lateinit var imageUri: Uri
+    private var imageUri: Uri? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -83,6 +83,8 @@ class SignUpFragment : Fragment() {
             }
 
             if (isValid) {
+                if (imageUri == null)
+                    imageUri = Uri.parse("android.resource://com.example.musicapp/drawable/image")
                 signUpViewModel.signUp(email = email, password = password, nickname = nickname, imageUri = imageUri.toString())
             }
         }

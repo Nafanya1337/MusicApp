@@ -37,49 +37,14 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_begin="60dp" />
 
-        <Button
-            android:id="@+id/vibesButton"
-            style="@style/Button_Text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/vibes_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/guideline_Header" />
-
-        <TextView
-            android:id="@+id/trackedArtistTextView"
-            style="@style/Header_Text_Home"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:text="@string/tracked_artists_header"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/vibesButton" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/trackedArtistRecyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:paddingVertical="10dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/trackedArtistTextView" />
-
         <TextView
             android:id="@+id/chartsTextView"
             style="@style/Header_Text_Home"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:text="@string/charts_header"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/trackedArtistRecyclerView" />
+            app:layout_constraintTop_toTopOf="@+id/guideline_Header" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chartsRecyclerView"

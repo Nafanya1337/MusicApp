@@ -20,7 +20,10 @@ class ListTrackAdapter(
     var title: String,
     val clickableImpl: Clickable,
     val isPlaylist: Boolean = false,
-    val diffUtilCallback: DiffUtilCallback<Playlistable> = DiffUtilCallback(emptyList(), emptyList()),
+    val diffUtilCallback: DiffUtilCallback<Playlistable> = DiffUtilCallback(
+        emptyList(),
+        emptyList()
+    ),
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     var list: List<Playlistable> = emptyList()
@@ -50,7 +53,8 @@ class ListTrackAdapter(
                     parent,
                     false
                 )
-            HeaderViewHoler(binding)}
+                HeaderViewHoler(binding)
+            }
 
             TRACK_VIEW -> {
                 val binding = SongCardLayoutBinding.inflate(
@@ -60,12 +64,12 @@ class ListTrackAdapter(
                 )
                 TrackViewHolder(binding)
             }
+
             else -> throw ViewHolderNotFoundExepction()
         }
     }
 
     override fun getItemViewType(position: Int): Int {
-        Log.d("mymy", position.toString())
         return if (isPlaylist && position == PLAYLIST_VIEW) PLAYLIST_VIEW else TRACK_VIEW
     }
 
@@ -74,8 +78,7 @@ class ListTrackAdapter(
             val track = list[position]
             (track as? TrackVO)?.let {
                 holder.binding.trackName.text = track.title
-               holder.binding.artistName.text = track.artist.name
-                // Загрузка изображения trackImage с помощью Picasso, Glide или другой библиотеки для загрузки изображений
+                holder.binding.artistName.text = track.artist.name
                 val imageUrl = track.album?.picture
                     ?: "https://e-cdns-images.dzcdn.net/images/misc/235ec47f2b21c3c73e02fce66f56ccc5/500x500-000000-80-0-0.jpg"
                 Glide
@@ -86,7 +89,7 @@ class ListTrackAdapter(
                 if (!track.explicitLyrics) {
                     holder.binding.explicitContentIcon.visibility = View.GONE
                 }
-                if (holder.binding.trackName.width >= 100)
+                if (track.title.count() >= 75)
                     holder.binding.trackName.isSelected = true
                 holder.itemView.setOnClickListener {
                     clickableImpl.onItemClick(TrackListVO(title, list), position)
@@ -100,6 +103,10 @@ class ListTrackAdapter(
                 holder.binding.playlistArtistName.text =
                     it.contributor?.joinToString(", ") { it.name }
                 holder.binding.playlistPlaylistName.text = it.title
+                if (it.picture == "")
+                    holder.binding.playlistImage.visibility = View.GONE
+                else
+                    holder.binding.playlistImage.visibility = View.VISIBLE
                 Glide
                     .with(holder.itemView)
                     .load(it.picture)

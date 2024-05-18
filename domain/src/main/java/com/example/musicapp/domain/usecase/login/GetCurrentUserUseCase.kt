@@ -1,10 +1,10 @@
 package com.example.musicapp.domain.usecase.login
 
 import com.example.musicapp.domain.models.login.User
-import com.example.musicapp.domain.repository.LoginRepository
+import com.example.musicapp.domain.repository.FirebaseRepository
 
-class GetCurrentUserUseCase(private val loginRepository: LoginRepository) {
+class GetCurrentUserUseCase(private val firebaseRepository: FirebaseRepository) {
     suspend fun execute(callback: (User?) -> Unit) {
-        loginRepository.getCurrentUser(callback)
+        firebaseRepository.getCurrentUser(callback)
     }
 }

@@ -16,10 +16,10 @@ data class CurrentTrackVO(
 )
 
 data class AlbumInfoVO(
-    val id: Long,
-    val title: String,
-    val picture: String,
-    val pictureBig: String?
+    val id: Long = 0,
+    val title: String = "",
+    val picture: String = "",
+    val pictureBig: String? = null
 )
 
 data class ContributorsVO(
