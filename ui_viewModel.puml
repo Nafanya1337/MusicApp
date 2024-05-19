@@ -1,0 +1,39 @@
+@startuml
+class com.example.musicapp.presentation.home.HomeViewModel {
+}
+class com.example.musicapp.presentation.artist.ArtistFragmentViewModel {
+}
+class com.example.musicapp.presentation.main.MainActivityViewModel {
+}
+enum com.example.musicapp.presentation.main.LoopinType {
++ LoopinType nextLoopType()
+}
+
+class com.example.musicapp.presentation.login.signIn.SignInViewModel {
+    +  result
+    + void signIn(String,String)
+}
+
+class com.example.musicapp.presentation.login.signUp.SignUpViewModel {
++  result
++ void signUp(String,String,String,String)
+- void validateData(String)
+}
+
+
+class com.example.musicapp.presentation.search.SearchViewModel {
+}
+class com.example.musicapp.presentation.account.AccountViewModel {
++ void signOut()
+}
+
+
+class com.example.musicapp.presentation.playlist.PlaylistViewModel {
++  trackList
++  currentPosition
++ AlbumInfoVO album
++ void setAlbumInfo(AlbumInfoVO)
++ void downloadTrackList(Long,String,PlaylistType)
++ void setCurrentPosition(Int)
+}
+@enduml

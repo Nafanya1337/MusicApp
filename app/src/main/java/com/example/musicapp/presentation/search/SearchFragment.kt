@@ -12,18 +12,16 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
-import com.example.musicapp.MusicApp
-import com.example.musicapp.ListTrackAdapter
-import com.example.musicapp.MainActivity
+import com.example.musicapp.app.MusicApp
+import com.example.musicapp.presentation.adapter.ListTrackAdapter
+import com.example.musicapp.presentation.main.MainActivity
 import com.example.musicapp.databinding.FragmentSearchBinding
-import com.example.musicapp.domain.models.TrackListVO
+import com.example.musicapp.domain.models.tracks.TrackListVO
 import com.example.musicapp.domain.models.search.SearchRequestVO
 import com.example.musicapp.domain.models.search.StatusClassVO
-import com.example.musicapp.domain.models.TrackVO
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

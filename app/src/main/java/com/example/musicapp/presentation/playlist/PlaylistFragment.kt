@@ -5,20 +5,15 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.marginTop
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
-import com.example.musicapp.ListTrackAdapter
-import com.example.musicapp.MainActivity
-import com.example.musicapp.R
+import com.example.musicapp.presentation.adapter.ListTrackAdapter
+import com.example.musicapp.presentation.main.MainActivity
 import com.example.musicapp.data.remote.models.home.RadioDTO
-import com.example.musicapp.data.utils.RoundedCornersTransformation
 import com.example.musicapp.data.utils.ToDomainUtil.toDomain
 import com.example.musicapp.databinding.FragmentPlaylistBinding
-import com.example.musicapp.domain.models.AlbumInfoVO
-import com.example.musicapp.domain.models.PlaylistType
-import com.example.musicapp.domain.models.TrackListVO
+import com.example.musicapp.domain.models.tracks.AlbumInfoVO
+import com.example.musicapp.domain.models.tracks.PlaylistType
+import com.example.musicapp.domain.models.tracks.TrackListVO
 import com.example.musicapp.domain.models.home.RadioVO
 import com.example.musicapp.presentation.utils.SpaceItemDecorationUtil
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -47,12 +42,14 @@ class PlaylistFragment : Fragment(), ListTrackAdapter.Clickable {
         val currentPlaylist = args.currentPlaylist.toDomain()
 
         if (currentPlaylist.type == PlaylistType.ALBUM.text)
-            playlistViewModel.setAlbumInfo(AlbumInfoVO(
+            playlistViewModel.setAlbumInfo(
+                AlbumInfoVO(
                 id = currentPlaylist.id,
                 title = currentPlaylist.title,
                 picture = currentPlaylist.picture,
                 pictureBig = currentPlaylist.picture
-            ))
+            )
+            )
         playlistViewModel.downloadTrackList(currentPlaylist.id, currentPlaylist.title, when (currentPlaylist.type) {
             PlaylistType.ALBUM.text -> PlaylistType.ALBUM
             PlaylistType.ALL_ARTIST_TRACKS.text -> PlaylistType.ALL_ARTIST_TRACKS

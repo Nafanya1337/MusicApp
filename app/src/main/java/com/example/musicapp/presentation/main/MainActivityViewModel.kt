@@ -1,12 +1,12 @@
-package com.example.musicapp.presentation
+package com.example.musicapp.presentation.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.musicapp.MusicApp.Companion.userFav
-import com.example.musicapp.domain.models.CurrentTrackVO
-import com.example.musicapp.domain.models.TrackListVO
-import com.example.musicapp.domain.models.TrackVO
+import com.example.musicapp.app.MusicApp.Companion.userFav
+import com.example.musicapp.domain.models.tracks.CurrentTrackVO
+import com.example.musicapp.domain.models.tracks.TrackListVO
+import com.example.musicapp.domain.models.tracks.TrackVO
 import com.example.musicapp.domain.models.artist.ArtistVO
 import com.example.musicapp.domain.models.login.User
 import com.example.musicapp.domain.repository.TrackRepository

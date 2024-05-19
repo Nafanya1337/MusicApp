@@ -1,7 +1,6 @@
 package com.example.musicapp.data.remote.models.artist
 
-import com.example.musicapp.data.remote.models.TrackDTO
-import com.example.musicapp.domain.models.ContributorsVO
+import com.example.musicapp.domain.models.tracks.ContributorsVO
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 

@@ -7,6 +7,7 @@ buildscript {
         val navVersion = "2.7.7"
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:$navVersion")
         classpath("com.google.gms:google-services:4.4.1")
+        classpath("org.mockito:mockito-core:5.7.0")
     }
 }
 // Top-level build file where you can add configuration options common to all sub-projects/modules.

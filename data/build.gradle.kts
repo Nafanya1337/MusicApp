@@ -64,4 +64,26 @@ dependencies {
     implementation("io.insert-koin:koin-android:$koinVersion")
     implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
     testImplementation("io.insert-koin:koin-test:$koinVersion")
+
+    // JUnit dependency for unit tests
+    testImplementation("junit:junit:4.13.2")
+
+// Mockito dependency for unit tests
+    testImplementation("org.mockito:mockito-core:4.0.0")
+
+// Optional: Mockito Kotlin extension if you use Kotlin
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+
+// AndroidX Test - Core library
+    testImplementation("androidx.test:core:1.4.0")
+
+// AndroidX Test - JUnit support
+    androidTestImplementation("androidx.test.ext:junit:1.1.3")
+
+// Optional: AndroidX Test - Mockito Android support (for instrumented tests)
+    androidTestImplementation("org.mockito:mockito-android:4.0.0")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+
+    implementation(kotlin("reflect"))
 }

@@ -2,7 +2,7 @@ package com.example.musicapp.data.repository.track
 
 import com.example.musicapp.data.remote.interfaces.MusicApi
 import com.example.musicapp.data.utils.ToDomainUtil.toDomain
-import com.example.musicapp.domain.models.CurrentTrackVO
+import com.example.musicapp.domain.models.tracks.CurrentTrackVO
 import com.example.musicapp.domain.repository.TrackRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

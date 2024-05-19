@@ -1,4 +1,4 @@
-package com.example.musicapp
+package com.example.musicapp.presentation.utils
 
 import androidx.recyclerview.widget.DiffUtil
 

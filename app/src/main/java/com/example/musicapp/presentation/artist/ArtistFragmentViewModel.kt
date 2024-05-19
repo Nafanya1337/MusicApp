@@ -3,7 +3,7 @@ package com.example.musicapp.presentation.artist
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.musicapp.domain.models.TrackVO
+import com.example.musicapp.domain.models.tracks.TrackVO
 import com.example.musicapp.domain.models.artist.ArtistVO
 import com.example.musicapp.domain.models.home.RadioVO
 import com.example.musicapp.domain.usecase.artist.GetArtistAlbumsUseCase

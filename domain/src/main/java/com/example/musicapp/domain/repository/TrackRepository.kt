@@ -1,7 +1,6 @@
 package com.example.musicapp.domain.repository
 
-import com.example.musicapp.domain.models.home.ChartResponseVO
-import com.example.musicapp.domain.models.CurrentTrackVO
+import com.example.musicapp.domain.models.tracks.CurrentTrackVO
 
 interface TrackRepository {
 

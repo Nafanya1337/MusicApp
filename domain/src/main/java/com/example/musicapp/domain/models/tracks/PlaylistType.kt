@@ -1,4 +1,4 @@
-package com.example.musicapp.domain.models
+package com.example.musicapp.domain.models.tracks
 
 enum class PlaylistType(val text: String) {
     RADIO("radio"),

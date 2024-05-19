@@ -1,4 +1,4 @@
-package com.example.musicapp
+package com.example.musicapp.presentation.adapter
 
 
 import android.view.LayoutInflater
@@ -10,10 +10,11 @@ import com.bumptech.glide.Glide
 import com.example.musicapp.data.utils.RoundedCornersTransformation
 import com.example.musicapp.databinding.PlaylistHeaderBinding
 import com.example.musicapp.databinding.SongCardLayoutBinding
-import com.example.musicapp.domain.models.Playlistable
-import com.example.musicapp.domain.models.TrackListVO
-import com.example.musicapp.domain.models.TrackVO
+import com.example.musicapp.domain.models.tracks.Playlistable
+import com.example.musicapp.domain.models.tracks.TrackListVO
+import com.example.musicapp.domain.models.tracks.TrackVO
 import com.example.musicapp.domain.models.home.RadioVO
+import com.example.musicapp.presentation.utils.DiffUtilCallback
 
 class ListTrackAdapter(
     var title: String,

@@ -1,8 +1,6 @@
 package com.example.musicapp.domain.usecase.track
 
-import com.example.musicapp.domain.models.TrackVO
 import com.example.musicapp.domain.repository.FirebaseRepository
-import javax.security.auth.callback.Callback
 
 class DeleteFromFavouriteUseCase(private val firebaseRepository: FirebaseRepository) {
 

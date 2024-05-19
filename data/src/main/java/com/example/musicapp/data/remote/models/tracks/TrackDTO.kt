@@ -1,4 +1,4 @@
-package com.example.musicapp.data.remote.models
+package com.example.musicapp.data.remote.models.tracks
 
 import com.example.musicapp.data.remote.models.artist.ArtistDTO
 import com.google.gson.annotations.SerializedName

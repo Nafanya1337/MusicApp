@@ -1,6 +1,6 @@
 package com.example.musicapp.modules
 
-import com.example.musicapp.data.repository.PlaylistRepositoryImpl
+import com.example.musicapp.data.repository.playlist.PlaylistRepositoryImpl
 import com.example.musicapp.data.repository.artist.ArtistRepositoryImpl
 import com.example.musicapp.data.repository.login.FirebaseRepositoryImpl
 import com.example.musicapp.data.repository.search.SearchRequestRepositoryImpl

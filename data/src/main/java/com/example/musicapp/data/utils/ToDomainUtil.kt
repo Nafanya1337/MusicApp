@@ -1,10 +1,10 @@
 package com.example.musicapp.data.utils
 
-import com.example.musicapp.data.remote.models.AlbumInfoDTO
-import com.example.musicapp.data.remote.models.ContributorsDTO
-import com.example.musicapp.data.remote.models.CurrentTrackDTO
-import com.example.musicapp.data.remote.models.TrackDTO
-import com.example.musicapp.data.remote.models.TrackListDTO
+import com.example.musicapp.data.remote.models.tracks.AlbumInfoDTO
+import com.example.musicapp.data.remote.models.tracks.ContributorsDTO
+import com.example.musicapp.data.remote.models.tracks.CurrentTrackDTO
+import com.example.musicapp.data.remote.models.tracks.TrackDTO
+import com.example.musicapp.data.remote.models.tracks.TrackListDTO
 import com.example.musicapp.data.remote.models.artist.AlbumDTO
 import com.example.musicapp.data.remote.models.artist.ArtistDTO
 import com.example.musicapp.data.remote.models.home.RadioDTO
@@ -13,11 +13,11 @@ import com.example.musicapp.data.remote.models.search.ChartResponseDTO
 import com.example.musicapp.data.remote.models.search.SearchResponseDTO
 import com.example.musicapp.data.remote.models.search.StatusClassDTO
 import com.example.musicapp.data.remote.models.search.TrackResponseDTO
-import com.example.musicapp.domain.models.AlbumInfoVO
-import com.example.musicapp.domain.models.ContributorsVO
-import com.example.musicapp.domain.models.CurrentTrackVO
-import com.example.musicapp.domain.models.TrackListVO
-import com.example.musicapp.domain.models.TrackVO
+import com.example.musicapp.domain.models.tracks.AlbumInfoVO
+import com.example.musicapp.domain.models.tracks.ContributorsVO
+import com.example.musicapp.domain.models.tracks.CurrentTrackVO
+import com.example.musicapp.domain.models.tracks.TrackListVO
+import com.example.musicapp.domain.models.tracks.TrackVO
 import com.example.musicapp.domain.models.artist.AlbumVO
 import com.example.musicapp.domain.models.artist.ArtistVO
 import com.example.musicapp.domain.models.home.ChartResponseVO

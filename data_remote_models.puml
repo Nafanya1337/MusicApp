@@ -1,0 +1,36 @@
+@startuml
+class com.example.musicapp.data.remote.models.search.SearchResponseDTO {
+}
+class com.example.musicapp.data.remote.models.search.ChartResponseDTO {
+}
+class com.example.musicapp.data.remote.models.search.TrackResponseDTO {
+}
+class com.example.musicapp.data.remote.models.artist.ArtistDTO {
+}
+class com.example.musicapp.data.remote.models.tracks.TrackListDTO {
+}
+class com.example.musicapp.data.remote.models.artist.AlbumResponse {
+}
+class com.example.musicapp.data.remote.models.artist.AlbumDTO {
+}
+enum com.example.musicapp.data.remote.models.search.StatusClassDTO {
++ String errorMessage
++ StatusClassDTO withError(String)
+}
+
+
+class com.example.musicapp.data.remote.models.home.RadioResponseDTO {
+}
+class com.example.musicapp.data.remote.models.home.RadioDTO {
+}
+class com.example.musicapp.data.remote.models.tracks.TrackDTO {
+}
+class com.example.musicapp.data.remote.models.artist.ContributorsResponseDTO {
+}
+class com.example.musicapp.data.remote.models.tracks.CurrentTrackDTO {
+}
+class com.example.musicapp.data.remote.models.tracks.AlbumInfoDTO {
+}
+class com.example.musicapp.data.remote.models.tracks.ContributorsDTO {
+}
+@enduml

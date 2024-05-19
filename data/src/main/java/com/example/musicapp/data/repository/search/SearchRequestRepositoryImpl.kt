@@ -1,8 +1,8 @@
 package com.example.musicapp.data.repository.search
 
 import com.example.musicapp.data.remote.interfaces.MusicApi
-import com.example.musicapp.data.remote.models.TrackDTO
-import com.example.musicapp.data.remote.models.TrackListDTO
+import com.example.musicapp.data.remote.models.tracks.TrackDTO
+import com.example.musicapp.data.remote.models.tracks.TrackListDTO
 import com.example.musicapp.data.remote.models.search.StatusClassDTO
 import com.example.musicapp.data.storage.interfaces.SearchRequestStorage
 import com.example.musicapp.data.utils.ToDomainUtil.toDomain

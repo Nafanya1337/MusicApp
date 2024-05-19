@@ -1,0 +1,147 @@
+@startuml
+class com.example.musicapp.domain.models.tracks.TrackVO {
+}
+class com.example.musicapp.domain.usecase.login.SignOutUseCase {
++ void execute()
+}
+
+class com.example.musicapp.domain.usecase.library.GetUserFavouritesUseCase {
+}
+enum com.example.musicapp.domain.models.search.StatusClassVO {
+}
+class com.example.musicapp.domain.models.home.ChartResponseVO {
+}
+class com.example.musicapp.domain.models.home.TrackResponseVO {
+}
+class com.example.musicapp.domain.usecase.artist.GetArtistAlbumsUseCase {
++ List<RadioVO> execute(Long)
+}
+
+class com.example.musicapp.domain.usecase.search.SaveSearchRequestUseCase {
++ Boolean execute(SearchRequestVO)
+}
+
+interface com.example.musicapp.domain.repository.SearchRequestRepository {
++ SearchResponseVO searchTracks(SearchRequestVO)
++ Boolean saveSearchRequest(SearchRequestVO)
++ List<SearchRequestVO> getSearchHistory()
++ Boolean clearSearchHistory()
+}
+
+interface com.example.musicapp.domain.repository.PlaylistRepository {
++ ChartResponseVO getChart()
++ RadioResponseVO getRadio()
++ List<TrackVO> getTracklist(Long,PlaylistType)
+}
+
+class com.example.musicapp.domain.models.artist.ArtistVO {
+}
+class com.example.musicapp.domain.usecase.search.ClearSearchHistoryUseCase {
++ Boolean execute()
+}
+
+class com.example.musicapp.domain.models.artist.ContributorsResponse {
+}
+class com.example.musicapp.domain.usecase.track.DownloadTrackUseCase {
++ void execute(String)
+}
+
+class com.example.musicapp.domain.models.tracks.CurrentTrackVO {
+}
+class com.example.musicapp.domain.models.tracks.AlbumInfoVO {
+}
+class com.example.musicapp.domain.models.tracks.ContributorsVO {
+}
+class com.example.musicapp.domain.models.tracks.TrackListVO {
+}
+class com.example.musicapp.domain.models.search.SearchRequestVO {
+}
+class com.example.musicapp.domain.usecase.login.SignInUseCase {
++ void execute(String,String,(Boolean) -> Unit)
+}
+
+class com.example.musicapp.domain.models.home.RadioResponseVO {
+}
+class com.example.musicapp.domain.models.home.RadioVO {
+}
+interface com.example.musicapp.domain.repository.FirebaseRepository {
++ void signUp(String,String,String,String,(Boolean) -> Unit)
++ void signIn(String,String,(Boolean) -> Unit)
++ void getCurrentUser((User?) -> Unit)
++ void signOut()
++ void getFavourites(String,(List<TrackVO>) -> Unit)
++ void addTrackToFavourites(String,TrackVO,(Boolean) -> Unit)
++ void deleteFromFavourites(String,Long,(Boolean) -> Unit)
+}
+
+class com.example.musicapp.domain.models.search.SearchResponseVO {
+}
+interface com.example.musicapp.domain.repository.TrackRepository {
++ CurrentTrackVO? streamTrack(Long)
++ void downloadTrack(String)
++ void getTrackInfo(Long)
++ CurrentTrackVO? getCurrent()
++ CurrentTrackVO? getNext()
++ CurrentTrackVO? getPrevious()
+}
+
+class com.example.musicapp.domain.models.artist.AlbumVO {
+}
+class com.example.musicapp.domain.usecase.search.SearchTracksUseCase {
++ SearchResponseVO execute(SearchRequestVO)
+}
+
+class com.example.musicapp.domain.usecase.search.GetSearchHistoryUseCase {
++ List<SearchRequestVO> execute()
+}
+
+class com.example.musicapp.domain.usecase.artist.GetArtistTopTrackUseCase {
++ List<TrackVO> execute(Long)
+}
+
+class com.example.musicapp.domain.usecase.login.SignUpUseCase {
++ void execute(String,String,String,String,(Boolean) -> Unit)
+}
+
+class com.example.musicapp.domain.usecase.track.GetFavouritesUseCase {
++ List<TrackVO> execute(String)
+}
+
+enum com.example.musicapp.domain.models.tracks.PlaylistType {
+}
+class com.example.musicapp.domain.models.login.User {
+}
+class com.example.musicapp.domain.usecase.track.DeleteFromFavouriteUseCase {
++ void execute(String,Long,(Boolean) -> Unit)
+}
+
+class com.example.musicapp.domain.usecase.login.GetCurrentUserUseCase {
++ void execute((User?) -> Unit)
+}
+
+interface com.example.musicapp.domain.models.tracks.Playlistable {
+}
+interface com.example.musicapp.domain.repository.ArtistRepository {
++ ArtistVO getArtistInfo(Long)
++ List<TrackVO> getArtistTopTracks(Long,Int)
++ List<TrackVO> getArtistTracks(Long)
++ List<RadioVO> getArtistAlbums(Long)
+}
+
+class com.example.musicapp.domain.usecase.artist.GetArtistTracksUseCase {
++ List<TrackVO> execute(Long)
+}
+
+class com.example.musicapp.domain.usecase.artist.GetArtistInfoUseCase {
++ ArtistVO execute(Long)
+}
+
+class com.example.musicapp.domain.usecase.track.AddTrackToFavouritesUseCase {
++ void execute(String,TrackVO,(Boolean) -> Unit)
+}
+
+class com.example.musicapp.domain.usecase.track.GetTrackInfoUseCase {
++ void execute(Long)
+}
+
+@enduml

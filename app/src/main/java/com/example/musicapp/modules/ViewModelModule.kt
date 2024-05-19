@@ -1,11 +1,11 @@
 package com.example.musicapp.modules
 
-import com.example.musicapp.presentation.MainActivityViewModel
 import com.example.musicapp.presentation.account.AccountViewModel
 import com.example.musicapp.presentation.artist.ArtistFragmentViewModel
 import com.example.musicapp.presentation.home.HomeViewModel
 import com.example.musicapp.presentation.login.signIn.SignInViewModel
 import com.example.musicapp.presentation.login.signUp.SignUpViewModel
+import com.example.musicapp.presentation.main.MainActivityViewModel
 import com.example.musicapp.presentation.playlist.PlaylistViewModel
 import com.example.musicapp.presentation.search.SearchViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel

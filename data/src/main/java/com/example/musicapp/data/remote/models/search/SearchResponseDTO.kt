@@ -1,7 +1,6 @@
 package com.example.musicapp.data.remote.models.search
 
-import com.example.musicapp.data.remote.models.TrackDTO
-import com.example.musicapp.data.remote.models.TrackListDTO
+import com.example.musicapp.data.remote.models.tracks.TrackDTO
 import com.google.gson.annotations.SerializedName
 
 data class SearchResponseDTO(

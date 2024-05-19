@@ -1,7 +1,7 @@
 package com.example.musicapp.domain.models.home
 
-import com.example.musicapp.domain.models.ContributorsVO
-import com.example.musicapp.domain.models.Playlistable
+import com.example.musicapp.domain.models.tracks.ContributorsVO
+import com.example.musicapp.domain.models.tracks.Playlistable
 
 data class RadioResponseVO (
     val data: List<RadioVO>

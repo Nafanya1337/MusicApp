@@ -1,8 +1,7 @@
 package com.example.musicapp.domain.repository
 
 
-import com.example.musicapp.domain.models.TrackVO
-import com.example.musicapp.domain.models.artist.AlbumVO
+import com.example.musicapp.domain.models.tracks.TrackVO
 import com.example.musicapp.domain.models.artist.ArtistVO
 import com.example.musicapp.domain.models.home.RadioVO
 

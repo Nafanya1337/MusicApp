@@ -3,12 +3,8 @@ package com.example.musicapp.presentation.login.signUp
 import android.util.Patterns
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
 
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.musicapp.MusicApp
 import com.example.musicapp.domain.usecase.login.SignUpUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

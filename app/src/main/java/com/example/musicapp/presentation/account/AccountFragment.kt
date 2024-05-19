@@ -8,11 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
-import com.example.musicapp.DARK_THEME_ENABLED_KEY
-import com.example.musicapp.MainActivity
-import com.example.musicapp.MusicApp
+import com.example.musicapp.app.DARK_THEME_ENABLED_KEY
+import com.example.musicapp.presentation.main.MainActivity
+import com.example.musicapp.app.MusicApp
 import com.example.musicapp.R
-import com.example.musicapp.THEME_PREFERENCES
+import com.example.musicapp.app.THEME_PREFERENCES
 import com.example.musicapp.databinding.FragmentAccountBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 

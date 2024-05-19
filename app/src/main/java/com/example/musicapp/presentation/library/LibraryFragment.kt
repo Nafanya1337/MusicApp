@@ -1,18 +1,15 @@
 package com.example.musicapp.presentation.library
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.viewModels
-import com.example.musicapp.ListTrackAdapter
-import com.example.musicapp.MainActivity
-import com.example.musicapp.MusicApp
-import com.example.musicapp.R
+import com.example.musicapp.presentation.adapter.ListTrackAdapter
+import com.example.musicapp.presentation.main.MainActivity
+import com.example.musicapp.app.MusicApp
 import com.example.musicapp.databinding.FragmentLibraryBinding
-import com.example.musicapp.domain.models.TrackListVO
+import com.example.musicapp.domain.models.tracks.TrackListVO
 import com.example.musicapp.presentation.utils.SpaceItemDecorationUtil
 
 

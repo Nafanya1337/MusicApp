@@ -1,4 +1,4 @@
-package com.example.musicapp
+package com.example.musicapp.presentation.main
 
 import android.content.ComponentName
 import android.os.Build
@@ -21,16 +21,17 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.example.musicapp.MusicApp.Companion.userFav
-import com.example.musicapp.data.remote.models.ContributorsDTO
+import com.example.musicapp.app.MusicApp
+import com.example.musicapp.app.MusicApp.Companion.userFav
+import com.example.musicapp.R
+import com.example.musicapp.data.remote.models.tracks.ContributorsDTO
 import com.example.musicapp.data.utils.RoundedCornersTransformation
 import com.example.musicapp.databinding.ActivityMainBinding
-import com.example.musicapp.domain.models.ContributorsVO
-import com.example.musicapp.domain.models.CurrentTrackVO
-import com.example.musicapp.domain.models.TrackListVO
-import com.example.musicapp.domain.models.TrackVO
+import com.example.musicapp.domain.models.tracks.ContributorsVO
+import com.example.musicapp.domain.models.tracks.CurrentTrackVO
+import com.example.musicapp.domain.models.tracks.TrackListVO
+import com.example.musicapp.domain.models.tracks.TrackVO
 import com.example.musicapp.domain.models.artist.ArtistVO
-import com.example.musicapp.presentation.MainActivityViewModel
 import com.example.musicapp.presentation.artist.ArtistsBottomSheetFragment
 import com.example.musicapp.presentation.artist.CONTRIBUTORS_CHOOSE_KEY
 import com.example.musicapp.presentation.artist.CONTRIBUTORS_REQUEST_KEY

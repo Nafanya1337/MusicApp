@@ -1,0 +1,38 @@
+@startuml
+class com.example.musicapp.domain.models.tracks.TrackVO {
+}
+class com.example.musicapp.domain.models.artist.AlbumVO {
+}
+class com.example.musicapp.domain.models.home.ChartResponseVO {
+}
+class com.example.musicapp.domain.models.home.TrackResponseVO {
+}
+enum com.example.musicapp.domain.models.search.StatusClassVO {
+}
+enum com.example.musicapp.domain.models.tracks.PlaylistType {
+}
+class com.example.musicapp.domain.models.login.User {
+}
+class com.example.musicapp.domain.models.artist.ArtistVO {
+}
+class com.example.musicapp.domain.models.artist.ContributorsResponse {
+}
+class com.example.musicapp.domain.models.tracks.CurrentTrackVO {
+}
+class com.example.musicapp.domain.models.tracks.AlbumInfoVO {
+}
+class com.example.musicapp.domain.models.tracks.ContributorsVO {
+}
+class com.example.musicapp.domain.models.tracks.TrackListVO {
+}
+class com.example.musicapp.domain.models.search.SearchRequestVO {
+}
+interface com.example.musicapp.domain.models.tracks.Playlistable {
+}
+class com.example.musicapp.domain.models.home.RadioResponseVO {
+}
+class com.example.musicapp.domain.models.home.RadioVO {
+}
+class com.example.musicapp.domain.models.search.SearchResponseVO {
+}
+@enduml

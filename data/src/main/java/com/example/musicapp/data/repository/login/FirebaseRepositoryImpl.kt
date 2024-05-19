@@ -3,8 +3,7 @@ package com.example.musicapp.data.repository.login
 
 import android.net.Uri
 import com.example.musicapp.data.storage.interfaces.FirebaseStorage
-import com.example.musicapp.domain.models.Playlistable
-import com.example.musicapp.domain.models.TrackVO
+import com.example.musicapp.domain.models.tracks.TrackVO
 import com.example.musicapp.domain.models.login.User
 import com.example.musicapp.domain.repository.FirebaseRepository
 import kotlinx.coroutines.coroutineScope

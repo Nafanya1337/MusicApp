@@ -3,10 +3,10 @@ package com.example.musicapp.presentation.playlist
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.musicapp.domain.models.AlbumInfoVO
-import com.example.musicapp.domain.models.PlaylistType
-import com.example.musicapp.domain.models.TrackListVO
-import com.example.musicapp.domain.models.TrackVO
+import com.example.musicapp.domain.models.tracks.AlbumInfoVO
+import com.example.musicapp.domain.models.tracks.PlaylistType
+import com.example.musicapp.domain.models.tracks.TrackListVO
+import com.example.musicapp.domain.models.tracks.TrackVO
 import com.example.musicapp.domain.repository.PlaylistRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

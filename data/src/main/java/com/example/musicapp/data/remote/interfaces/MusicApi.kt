@@ -1,10 +1,8 @@
 package com.example.musicapp.data.remote.interfaces
 
-import com.example.musicapp.data.remote.models.ContributorsDTO
 import com.example.musicapp.data.remote.models.search.ChartResponseDTO
-import com.example.musicapp.data.remote.models.CurrentTrackDTO
-import com.example.musicapp.data.remote.models.TrackListDTO
-import com.example.musicapp.data.remote.models.artist.AlbumDTO
+import com.example.musicapp.data.remote.models.tracks.CurrentTrackDTO
+import com.example.musicapp.data.remote.models.tracks.TrackListDTO
 import com.example.musicapp.data.remote.models.artist.AlbumResponse
 import com.example.musicapp.data.remote.models.artist.ArtistDTO
 import com.example.musicapp.data.remote.models.artist.ContributorsResponseDTO

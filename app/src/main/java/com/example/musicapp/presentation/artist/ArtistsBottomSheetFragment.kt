@@ -9,11 +9,11 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
-import com.example.musicapp.data.remote.models.ContributorsDTO
+import com.example.musicapp.data.remote.models.tracks.ContributorsDTO
 import com.example.musicapp.data.utils.ToDomainUtil.toData
 import com.example.musicapp.data.utils.ToDomainUtil.toDomain
 import com.example.musicapp.databinding.FragmentArtistsBottomSheetBinding
-import com.example.musicapp.domain.models.ContributorsVO
+import com.example.musicapp.domain.models.tracks.ContributorsVO
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 const val CONTRIBUTORS_KEY = "Contributors"

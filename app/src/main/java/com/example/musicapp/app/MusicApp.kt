@@ -1,11 +1,11 @@
-package com.example.musicapp
+package com.example.musicapp.app
 
 
 import android.app.Application
 import android.content.Context
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.MutableLiveData
-import com.example.musicapp.domain.models.Playlistable
+import com.example.musicapp.domain.models.tracks.Playlistable
 import com.example.musicapp.domain.models.login.User
 import com.example.musicapp.modules.ApiModule
 import com.example.musicapp.modules.RepositoryModule

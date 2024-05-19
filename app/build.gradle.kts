@@ -47,14 +47,16 @@ android {
 
 dependencies {
 
-    implementation (project(":domain"))
-    implementation (project(":data"))
+    implementation(project(":domain"))
+    implementation(project(":data"))
     implementation("androidx.media3:media3-exoplayer:1.3.1")
     implementation("com.google.firebase:firebase-firestore-ktx:25.0.0")
     implementation("androidx.media3:media3-session:1.3.1")
     implementation("com.google.firebase:firebase-auth:23.0.0")
     implementation("androidx.legacy:legacy-support-v4:1.0.0")
     implementation("androidx.fragment:fragment-ktx:1.5.6")
+    implementation("com.google.firebase:firebase-database-ktx:21.0.0")
+    implementation("com.google.firebase:firebase-storage-ktx:21.0.0")
 
     // Navigation
     val nav_version = "2.7.7"
@@ -96,7 +98,29 @@ dependencies {
 
     implementation("io.insert-koin:koin-core:$koinVersion")
     implementation("io.insert-koin:koin-android:$koinVersion")
-    implementation ("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
     testImplementation("io.insert-koin:koin-test:$koinVersion")
+
+    // JUnit dependency for unit tests
+    testImplementation("junit:junit:4.13.2")
+
+// Mockito dependency for unit tests
+    testImplementation("org.mockito:mockito-core:4.0.0")
+
+// Optional: Mockito Kotlin extension if you use Kotlin
+    testImplementation("org.mockito.kotlin:mockito-kotlin:4.0.0")
+
+// AndroidX Test - Core library
+    testImplementation("androidx.test:core:1.4.0")
+
+// AndroidX Test - JUnit support
+    androidTestImplementation("androidx.test.ext:junit:1.1.3")
+
+// Optional: AndroidX Test - Mockito Android support (for instrumented tests)
+    androidTestImplementation("org.mockito:mockito-android:4.0.0")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+
+    implementation(kotlin("reflect"))
 
 }

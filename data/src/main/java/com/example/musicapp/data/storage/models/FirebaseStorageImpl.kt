@@ -1,8 +1,6 @@
 import android.net.Uri
 import android.util.Log
-import com.example.musicapp.data.remote.models.TrackDTO
-import com.example.musicapp.domain.models.Playlistable
-import com.example.musicapp.domain.models.TrackVO
+import com.example.musicapp.domain.models.tracks.TrackVO
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -11,6 +9,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
@@ -19,36 +18,53 @@ import java.util.UUID
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-class FirebaseStorageImpl :
-    com.example.musicapp.data.storage.interfaces.FirebaseStorage {
-
-    private val auth by lazy { FirebaseAuth.getInstance() }
-    private val database by lazy { FirebaseDatabase.getInstance() }
-    private val storage by lazy { com.google.firebase.storage.FirebaseStorage.getInstance() }
+class FirebaseStorageImpl(
+    private val auth: FirebaseAuth = FirebaseAuth.getInstance(),
+    private val database: FirebaseDatabase = FirebaseDatabase.getInstance(),
+    private val storage: FirebaseStorage = FirebaseStorage.getInstance()
+) : com.example.musicapp.data.storage.interfaces.FirebaseStorage {
 
     override suspend fun signUp(email: String, password: String, nickname: String, imageUri: Uri, callback: (Boolean) -> Unit) {
         withContext(Dispatchers.IO) {
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val user = auth.currentUser
-                        if (user != null) {
-                            writeNickname(user.uid, nickname) { success ->
-                                if (success) {
-                                    setUserImage(user.uid, imageUri.toString())
-                                    callback(true)
-                                } else {
-                                    callback(false)
-                                }
-                            }
-                        } else {
-                            callback(false)
-                        }
+            try {
+                Log.d(TAG, "Creating user with email: $email")
+                val authResult = signUpFirebase(email, password)
+                val user = auth.currentUser
+                if (user != null) {
+                    Log.d(TAG, "User created with UID: ${user.uid}")
+                    val nicknameSuccess = writeNickname(user.uid, nickname)
+                    if (nicknameSuccess) {
+                        Log.d(TAG, "Nickname written successfully")
+                        val uri = imageUri ?: Uri.parse("android.resource://com.example.musicapp/drawable/image")
+                        setUserImage(user.uid, uri.toString())
+                        withContext(Dispatchers.Main) { callback(true) }
                     } else {
-                        callback(false)
+                        Log.d(TAG, "Failed to write nickname")
+                        withContext(Dispatchers.Main) { callback(false) }
                     }
+                } else {
+                    Log.d(TAG, "User is null after creation")
+                    withContext(Dispatchers.Main) { callback(false) }
                 }
+            } catch (e: Exception) {
+                Log.e(TAG, "Exception during signUp: ${e.message}")
+                withContext(Dispatchers.Main) { callback(false) }
+            }
         }
+    }
+
+    private suspend fun writeNickname(uid: String, nickname: String): Boolean {
+        return suspendCoroutine { continuation ->
+            val nicknameRef: DatabaseReference = database.getReference("users").child(uid).child("nickname")
+            nicknameRef.setValue(nickname).addOnCompleteListener { task ->
+                Log.d(TAG, "Nickname setValue complete: ${task.isSuccessful}")
+                continuation.resume(task.isSuccessful)
+            }
+        }
+    }
+
+    suspend fun signUpFirebase(email: String, password: String) {
+        auth.createUserWithEmailAndPassword(email, password).await()
     }
 
     override fun signIn(email: String, password: String, callback: (Boolean) -> Unit) {
@@ -162,7 +178,6 @@ class FirebaseStorageImpl :
             })
     }
 
-
     override fun setUserImage(uid: String, imageUri: String) {
         val randomKey = UUID.randomUUID().toString()
         val riversRef = storage.getReference("users").child(uid).child("image/$randomKey")
@@ -175,17 +190,9 @@ class FirebaseStorageImpl :
             }
     }
 
-    private fun writeNickname(uid: String, nickname: String, callback: (Boolean) -> Unit) {
-        val nicknameRef: DatabaseReference = database.getReference("users").child(uid).child("nickname")
-        nicknameRef.setValue(nickname).addOnCompleteListener { task ->
-            callback(task.isSuccessful)
-        }
-    }
-
     override fun signOut() = auth.signOut()
 
     companion object {
         private const val TAG = "AuthStorageImpl"
     }
 }
-

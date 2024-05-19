@@ -1,7 +1,6 @@
 package com.example.musicapp.domain.repository
 
-import com.example.musicapp.domain.models.Playlistable
-import com.example.musicapp.domain.models.TrackVO
+import com.example.musicapp.domain.models.tracks.TrackVO
 import com.example.musicapp.domain.models.login.User
 
 

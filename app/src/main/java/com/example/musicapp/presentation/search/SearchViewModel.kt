@@ -4,15 +4,10 @@ package com.example.musicapp.presentation.search
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.musicapp.MusicApp
 import com.example.musicapp.domain.models.search.SearchRequestVO
 import com.example.musicapp.domain.models.search.StatusClassVO
-import com.example.musicapp.domain.models.TrackVO
+import com.example.musicapp.domain.models.tracks.TrackVO
 import com.example.musicapp.domain.usecase.search.ClearSearchHistoryUseCase
 import com.example.musicapp.domain.usecase.search.GetSearchHistoryUseCase
 import com.example.musicapp.domain.usecase.search.SaveSearchRequestUseCase

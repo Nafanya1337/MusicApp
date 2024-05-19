@@ -1,4 +1,4 @@
-package com.example.musicapp.domain.models
+package com.example.musicapp.domain.models.tracks
 
 import com.example.musicapp.domain.models.artist.ArtistVO
 

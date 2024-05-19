@@ -1,6 +1,6 @@
 package com.example.musicapp.domain.models.artist
 
-import com.example.musicapp.domain.models.ContributorsVO
+import com.example.musicapp.domain.models.tracks.ContributorsVO
 import java.util.Date
 
 data class AlbumVO(

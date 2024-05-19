@@ -3,7 +3,7 @@ package com.example.musicapp.presentation.home
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.musicapp.domain.models.TrackListVO
+import com.example.musicapp.domain.models.tracks.TrackListVO
 import com.example.musicapp.domain.models.home.RadioVO
 import com.example.musicapp.domain.repository.PlaylistRepository
 import kotlinx.coroutines.Dispatchers

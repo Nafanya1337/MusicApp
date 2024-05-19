@@ -1,9 +1,9 @@
 package com.example.musicapp.data.repository.artist
 
 import com.example.musicapp.data.remote.interfaces.MusicApi
-import com.example.musicapp.data.remote.models.TrackDTO
+import com.example.musicapp.data.remote.models.tracks.TrackDTO
 import com.example.musicapp.data.utils.AlbumToRadio.toRadioVO
-import com.example.musicapp.domain.models.TrackVO
+import com.example.musicapp.domain.models.tracks.TrackVO
 import com.example.musicapp.domain.models.artist.AlbumVO
 import com.example.musicapp.domain.models.artist.ArtistVO
 import com.example.musicapp.domain.repository.ArtistRepository

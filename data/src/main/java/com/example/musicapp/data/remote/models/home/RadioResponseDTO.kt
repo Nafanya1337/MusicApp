@@ -1,7 +1,7 @@
 package com.example.musicapp.data.remote.models.home
 
 import android.os.Parcelable
-import com.example.musicapp.data.remote.models.ContributorsDTO
+import com.example.musicapp.data.remote.models.tracks.ContributorsDTO
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 

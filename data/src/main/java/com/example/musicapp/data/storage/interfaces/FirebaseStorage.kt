@@ -1,8 +1,7 @@
 package com.example.musicapp.data.storage.interfaces
 
 import android.net.Uri
-import com.example.musicapp.domain.models.Playlistable
-import com.example.musicapp.domain.models.TrackVO
+import com.example.musicapp.domain.models.tracks.TrackVO
 import com.google.firebase.auth.FirebaseUser
 
 interface FirebaseStorage {

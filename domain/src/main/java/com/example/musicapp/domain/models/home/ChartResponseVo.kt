@@ -1,6 +1,6 @@
 package com.example.musicapp.domain.models.home
 
-import com.example.musicapp.domain.models.TrackVO
+import com.example.musicapp.domain.models.tracks.TrackVO
 
 data class ChartResponseVO(
     val track: TrackResponseVO

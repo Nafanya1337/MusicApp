@@ -1,6 +1,6 @@
 package com.example.musicapp.domain.usecase.library
 
-import com.example.musicapp.domain.models.Playlistable
+import com.example.musicapp.domain.models.tracks.Playlistable
 import com.example.musicapp.domain.repository.FirebaseRepository
 
 class GetUserFavouritesUseCase(

@@ -1,11 +1,7 @@
 package com.example.musicapp.presentation.account
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.initializer
-import androidx.lifecycle.viewmodel.viewModelFactory
-import com.example.musicapp.MusicApp
 import com.example.musicapp.domain.usecase.login.SignOutUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -1,6 +1,5 @@
 package com.example.musicapp.presentation.home
 
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,22 +7,19 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.bumptech.glide.Glide
-import com.example.musicapp.DiffUtilCallback
-import com.example.musicapp.ListTrackAdapter
-import com.example.musicapp.MainActivity
-import com.example.musicapp.MusicApp
+import com.example.musicapp.presentation.utils.DiffUtilCallback
+import com.example.musicapp.presentation.adapter.ListTrackAdapter
+import com.example.musicapp.presentation.main.MainActivity
+import com.example.musicapp.app.MusicApp
 import com.example.musicapp.R
-import com.example.musicapp.data.utils.RoundedCornersTransformation
 import com.example.musicapp.data.utils.ToDomainUtil.toData
 import com.example.musicapp.databinding.FragmentHomeBinding
-import com.example.musicapp.domain.models.Playlistable
-import com.example.musicapp.domain.models.TrackListVO
-import com.example.musicapp.domain.models.TrackVO
+import com.example.musicapp.domain.models.tracks.TrackListVO
+import com.example.musicapp.domain.models.tracks.TrackVO
 import com.example.musicapp.domain.models.home.RadioVO
 import com.example.musicapp.presentation.utils.SpaceItemDecorationUtil
 import org.koin.androidx.viewmodel.ext.android.viewModel
