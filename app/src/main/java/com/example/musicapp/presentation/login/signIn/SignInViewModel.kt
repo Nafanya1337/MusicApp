@@ -1,6 +1,5 @@
 package com.example.musicapp.presentation.login.signIn
 
-import android.util.Patterns
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -13,16 +12,10 @@ class SignInViewModel(private val signInUseCase: SignInUseCase): ViewModel() {
     val result = MutableLiveData<Boolean>()
 
     fun signIn(email: String, password: String) {
-        if (validateData(email)) {
-
-        }
         viewModelScope.launch(Dispatchers.IO) {
             signInUseCase.execute(email = email, password = password) { result ->
                 this@SignInViewModel.result.postValue(result)
             }
         }
     }
-
-    private fun validateData(email: String) = Patterns.EMAIL_ADDRESS.matcher(email).matches()
-
 }

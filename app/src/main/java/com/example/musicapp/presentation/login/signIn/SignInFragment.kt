@@ -1,15 +1,15 @@
 package com.example.musicapp.presentation.login.signIn
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.musicapp.presentation.main.MainActivity
 import com.example.musicapp.R
 import com.example.musicapp.databinding.FragmentSignInBinding
+import com.example.musicapp.presentation.main.MainActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -55,7 +55,6 @@ class SignInFragment : Fragment() {
 
             var isValid = true
 
-            // Проверка поля Email
             if (email.isEmpty()) {
                 binding.emailTextInputSignInLayout.error = "Email is required"
                 isValid = false
@@ -63,15 +62,12 @@ class SignInFragment : Fragment() {
                 binding.emailTextInputSignInLayout.error = null
             }
 
-            // Проверка поля Password
             if (password.isEmpty()) {
                 binding.passwordTextInputSignInLayout.error = "Password is required"
                 isValid = false
             } else {
                 binding.passwordTextInputSignInLayout.error = null
             }
-
-
 
             if (isValid) {
                 binding.buttonSignIn.isEnabled = false

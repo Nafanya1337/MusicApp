@@ -1,0 +1,253 @@
+@startuml
+class com.example.musicapp.presentation.utils.SpaceItemDecorationUtil {
++ void getItemOffsets(Rect,View,RecyclerView,RecyclerView.State)
+}
+
+class com.example.musicapp.presentation.home.PlaylistAdapter {
+}
+class com.example.musicapp.presentation.home.PlaylistViewHolder {
+}
+interface com.example.musicapp.presentation.home.Clickable {
++ void onItemClicked(RadioVO)
+}
+
+class com.example.musicapp.service.MusicService$MediaSessionCallback {
++ void onCustomCommand(void,MediaSession,void,MediaSession.ControllerInfo,void,SessionCommand,void,Bundle)
++ void null()
+}
+
+class com.example.musicapp.service.MusicService {
+- MediaSession? mediaSession
++ MediaSession? onGetSession(MediaSession.ControllerInfo)
++ void onCreate()
++ void onTaskRemoved(Intent?)
++ void onDestroy()
+}
+
+
+class com.example.musicapp.presentation.search.SearchFragment {
+- FragmentSearchBinding binding
+- SearchViewModel searchViewModel
+- ListTrackAdapter? adapter
+-  searchAdapter
+-  musicApp
++ void onCreateView(void,LayoutInflater,ViewGroup?,void,Bundle?)
++ void null()
++ void onItemClick(TrackListVO,Int)
++ void onViewCreated(View,Bundle?)
+- void hideKeyboard()
++ void onItemClick(SearchRequestVO)
+}
+
+
+class com.example.musicapp.presentation.search.VerticalSpaceItemDecoration {
++ void getItemOffsets(void,Rect,void,View,void,RecyclerView,void,RecyclerView.State)
++ void null()
+}
+
+class com.example.musicapp.app.MusicApp$Companion {
++  user
++  userFav
+}
+
+class com.example.musicapp.app.MusicApp {
++ void onCreate()
++ void applyTheme(Boolean)
+}
+
+class com.example.musicapp.presentation.home.HomeViewModel {
+}
+class com.example.musicapp.presentation.artist.ArtistFragmentViewModel {
+}
+class com.example.musicapp.presentation.main.MainActivityViewModel {
+}
+enum com.example.musicapp.presentation.main.LoopinType {
++ LoopinType nextLoopType()
+}
+
+class com.example.musicapp.presentation.artist.ArtistFragment {
+- FragmentArtstCardBinding binding
+- ArtistFragmentViewModel artistFragmentViewModel
+- ListTrackAdapter? adapter
++  artist_id
++ View onCreateView(LayoutInflater,ViewGroup?,Bundle?)
++ void onViewCreated(View,Bundle?)
+- void initArtistCard(Long)
++ void onItemClick(TrackListVO,Int)
++ void onItemClicked(RadioVO)
+}
+
+
+class com.example.musicapp.presentation.main.MainActivity {
+- ActivityMainBinding binding
+-  sessionToken
+- Job? progressBarUpdateJob
+-  controllerFuture
+- MainActivityViewModel mainActivityViewModel
++  navController
++ void onCreate(Bundle?)
++ void initUser()
++ void startNewTrackList(TrackListVO,Int)
+- void initUI()
++ void onStart()
++ void onStop()
++ void onResume()
++ void hidePlayer()
+- void initPlayer()
+- void changeTrack(CurrentTrackVO)
+- void startUpdatingProgressBar()
++ void openArtistProfile(ContributorsDTO)
+- String formatTime(Long)
+}
+
+
+class com.example.musicapp.presentation.utils.DiffUtilCallback {
+}
+class com.example.musicapp.presentation.home.HomeFragment {
+- FragmentHomeBinding binding
+- HomeViewModel homeViewModel
+- ListTrackAdapter? adapter
++ View onCreateView(LayoutInflater,ViewGroup?,Bundle?)
++ void onViewCreated(View,Bundle?)
++ void onItemClick(TrackListVO,Int)
++ void onItemClicked(RadioVO)
+}
+
+
+class com.example.musicapp.presentation.artist.ArtistsAdapter {
+}
+interface com.example.musicapp.presentation.artist.Clickable {
++ void onItemClick(ContributorsVO)
+}
+
+class com.example.musicapp.presentation.artist.ArtistView {
+}
+class com.example.musicapp.presentation.library.LibraryFragment {
++ FragmentLibraryBinding binding
+- ListTrackAdapter? adapter
++ View onCreateView(LayoutInflater,ViewGroup?,Bundle?)
++ void onViewCreated(View,Bundle?)
++ void onItemClick(TrackListVO,Int)
+}
+
+
+class com.example.musicapp.presentation.login.signUp.SignUpFragment {
++ FragmentSignUpBinding binding
++  signUpViewModel
+- Uri? imageUri
++ View onCreateView(LayoutInflater,ViewGroup?,Bundle?)
++ void onViewCreated(View,Bundle?)
+- void choosePicture()
++ void onActivityResult(Int,Int,Intent?)
+}
+
+
+class com.example.musicapp.presentation.adapter.ListTrackAdapter {
+}
+interface com.example.musicapp.presentation.adapter.Clickable {
++ void onItemClick(TrackListVO,Int)
+}
+
+class com.example.musicapp.presentation.adapter.TrackViewHolder {
+}
+class com.example.musicapp.presentation.adapter.HeaderViewHoler {
+}
+class com.example.musicapp.presentation.adapter.null {
++  PLAYLIST_VIEW
++  TRACK_VIEW
+}
+
+class com.example.musicapp.presentation.adapter.ViewHolderNotFoundExepction {
+}
+class com.example.musicapp.presentation.account.AccountFragment {
+-  viewModel
++ FragmentAccountBinding binding
++ View onCreateView(LayoutInflater,ViewGroup?,Bundle?)
++ void onViewCreated(View,Bundle?)
+}
+
+
+class com.example.musicapp.presentation.utils.SingleViewTouchableMotionLayout {
+-  viewToDetectTouch
+-  viewRect
+-  touchStarted
++ Boolean onTouchEvent(MotionEvent)
+}
+
+
+class com.example.musicapp.presentation.login.signUp.SignUpViewModel {
++  result
++ void signUp(String,String,String,String)
+}
+
+
+class com.example.musicapp.presentation.playlist.PlaylistFragment {
+- FragmentPlaylistBinding binding
+- PlaylistViewModel playlistViewModel
+- ListTrackAdapter? adapter
++ View onCreateView(LayoutInflater,ViewGroup?,Bundle?)
++ void onViewCreated(View,Bundle?)
++ void onItemClick(TrackListVO,Int)
++ RadioVO toDomain()
+}
+
+
+class com.example.musicapp.presentation.search.SearchHistoryAdapter {
+}
+interface com.example.musicapp.presentation.search.Clickable {
++ void onItemClick(SearchRequestVO)
+}
+
+class com.example.musicapp.presentation.search.HistoryViewHolder {
++ TextView searchText
+}
+
+class com.example.musicapp.presentation.artist.ArtistsBottomSheetFragment$Companion {
++ ArtistsBottomSheetFragment newInstance(List<ContributorsVO>)
+}
+
+class com.example.musicapp.presentation.artist.ArtistsBottomSheetFragment {
++ FragmentArtistsBottomSheetBinding binding
++ View? onCreateView(LayoutInflater,ViewGroup?,Bundle?)
++ void onViewCreated(View,Bundle?)
++ Dialog onCreateDialog(Bundle?)
++ Int getTheme()
++ void onItemClick(ContributorsVO)
+}
+
+
+class com.example.musicapp.presentation.login.signIn.SignInViewModel {
++  result
++ void signIn(String,String)
+}
+
+
+class com.example.musicapp.presentation.search.SearchViewModel {
+}
+class com.example.musicapp.presentation.account.AccountViewModel {
++ void signOut()
+}
+
+class com.example.musicapp.presentation.login.signIn.SignInFragment {
+-  signInViewModel
++ FragmentSignInBinding binding
++ View onCreateView(LayoutInflater,ViewGroup?,Bundle?)
++ void onViewCreated(View,Bundle?)
+}
+
+
+class com.example.musicapp.presentation.playlist.PlaylistViewModel {
++  trackList
++  currentPosition
++ AlbumInfoVO album
++ void setAlbumInfo(AlbumInfoVO)
++ void downloadTrackList(Long,String,PlaylistType)
++ void setCurrentPosition(Int)
+}
+
+
+
+
+com.example.musicapp.presentation.utils.ItemDecoration <|-- com.example.musicapp.presentation.utils.SpaceItemDecorationUtil
+
+@enduml

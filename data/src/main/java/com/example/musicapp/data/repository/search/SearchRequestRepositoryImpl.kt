@@ -57,5 +57,4 @@ class SearchRequestRepositoryImpl(
 
         return SearchResponseVO(list = tracks.map { it.toDomain() }, status = status.toDomain())
     }
-
 }

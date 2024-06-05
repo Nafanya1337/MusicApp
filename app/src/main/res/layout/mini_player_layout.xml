@@ -50,7 +50,7 @@
         android:fadingEdge="horizontal"
         android:marqueeRepeatLimit="marquee_forever"
         android:maxWidth="250dp"
-        android:text="Artisttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt"
+        android:text="Artist"
         app:layout_constraintBottom_toBottomOf="@+id/currentTrack_trackImage"
         app:layout_constraintStart_toEndOf="@+id/currentTrack_trackImage"
         app:layout_constraintTop_toBottomOf="@+id/currentTrack_trackName" />

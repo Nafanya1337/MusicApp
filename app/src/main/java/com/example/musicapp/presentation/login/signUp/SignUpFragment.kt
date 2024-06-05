@@ -4,15 +4,14 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.viewModels
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.musicapp.R
 import com.example.musicapp.databinding.FragmentSignUpBinding
+import com.example.musicapp.presentation.main.MainActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -48,7 +47,6 @@ class SignUpFragment : Fragment() {
 
             var isValid = true
 
-            // Проверка поля Nickname
             if (nickname.isEmpty()) {
                 binding.nicknameTextInputSignUpLayout.error = "Nickname is required"
                 isValid = false
@@ -56,7 +54,6 @@ class SignUpFragment : Fragment() {
                 binding.nicknameTextInputSignUpLayout.error = null
             }
 
-            // Проверка поля Email
             if (email.isEmpty()) {
                 binding.emailTextInputSignUpLayout.error = "Email is required"
                 isValid = false
@@ -64,7 +61,6 @@ class SignUpFragment : Fragment() {
                 binding.emailTextInputSignUpLayout.error = null
             }
 
-            // Проверка поля Password
             if (password.isEmpty()) {
                 binding.passwordTextInputSignUpLayout.error = "Password is required"
                 isValid = false
@@ -72,7 +68,6 @@ class SignUpFragment : Fragment() {
                 binding.passwordTextInputSignUpLayout.error = null
             }
 
-            // Проверка поля Re-enter Password
             if (rePassword.isEmpty()) {
                 binding.rePasswordTextInputSignUpLayout.error = "Please re-enter your password"
                 isValid = false
@@ -97,6 +92,11 @@ class SignUpFragment : Fragment() {
         signUpViewModel.result.observe(viewLifecycleOwner) { result ->
             val text = if (result) "success" else "failed"
             Toast.makeText(requireContext(), "Sign up $text", Toast.LENGTH_SHORT).show()
+            if (result) {
+                (activity as MainActivity).initUser()
+                findNavController().popBackStack()
+                findNavController().popBackStack()
+            }
         }
 
     }
@@ -114,15 +114,5 @@ class SignUpFragment : Fragment() {
             imageUri = data.data!!
             binding.imageUpload.setImageURI(imageUri)
         }
-    }
-
-    companion object {
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            SignUpFragment().apply {
-                arguments = Bundle().apply {
-
-                }
-            }
     }
 }

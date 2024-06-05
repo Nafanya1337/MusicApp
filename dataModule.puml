@@ -1,0 +1,165 @@
+@startuml
+class com.example.musicapp.data.remote.models.search.SearchResponseDTO {
+}
+class com.example.musicapp.data.remote.models.search.ChartResponseDTO {
+}
+class com.example.musicapp.data.remote.models.search.TrackResponseDTO {
+}
+class com.example.musicapp.data.storage.sharedprefs.SearchRequestSharedPrefsStorage {
+-  sharedPreferences
++ Boolean save(SearchRequest)
++ Set<String> get()
++ Boolean clear()
+}
+
+
+class com.example.musicapp.data.repository.track.TrackRepositoryImpl {
+}
+interface com.example.musicapp.data.storage.interfaces.SearchRequestStorage {
++ Boolean save(SearchRequest)
++ Set<String> get()
++ Boolean clear()
+}
+
+class com.example.musicapp.data.remote.models.home.RadioResponseDTO {
+}
+class com.example.musicapp.data.remote.models.home.RadioDTO {
+}
+enum com.example.musicapp.data.remote.models.search.StatusClassDTO {
++ String errorMessage
++ StatusClassDTO withError(String)
+}
+
+
+class com.example.data.ExampleInstrumentedTest {
++ void useAppContext()
+}
+
+class com.example.musicapp.data.remote.models.tracks.TrackListDTO {
+}
+class com.example.musicapp.data.repository.search.SearchRequestRepositoryImpl {
+}
+class com.example.musicapp.data.remote.models.artist.AlbumResponse {
+}
+class com.example.musicapp.data.remote.models.artist.AlbumDTO {
+}
+class com.example.data.ExampleUnitTest {
++ void addition_isCorrect()
+}
+
+class com.example.musicapp.data.utils.AlbumToRadio {
++ RadioVO toRadioVO()
+}
+
+class com.example.musicapp.data.remote.models.tracks.CurrentTrackDTO {
+}
+class com.example.musicapp.data.remote.models.tracks.AlbumInfoDTO {
+}
+class com.example.musicapp.data.remote.models.tracks.ContributorsDTO {
+}
+class com.example.musicapp.data.repository.login.model.UserDto {
+}
+class com.example.musicapp.data.utils.ToDomainUtil {
+- ChartResponseVO toDomain()
+- TrackResponseVO toDomain()
++ ContributorsVO toDomain()
+- TrackVO toDomain()
+- CurrentTrackVO toDomain()
+- AlbumInfoVO toDomain()
+- RadioResponseVO toDomain()
+- RadioVO toDomain()
++ ContributorsDTO toData()
++ RadioDTO toData()
+- SearchResponseVO toDomain()
+- TrackListVO toDomain()
+- StatusClassVO toDomain()
+- ArtistVO toDomain()
++ AlbumVO toDomain()
+}
+
+class com.example.musicapp.data.storage.models.SearchRequest {
+}
+class FirebaseStorageImpl {
+}
+class null {
++ void onDataChange(DataSnapshot)
++ void onCancelled(DatabaseError)
+}
+
+class null {
++ void onDataChange(DataSnapshot)
++ void onCancelled(DatabaseError)
+}
+
+class null {
++ void onDataChange(DataSnapshot)
++ void onCancelled(DatabaseError)
+}
+
+class null {
+-  TAG
+}
+
+class com.example.musicapp.data.remote.models.artist.ArtistDTO {
+}
+class com.example.musicapp.data.repository.login.FirebaseRepositoryImpl {
++ void signUp(void,String,void,String,void,String,void,String,void,(Boolean) -> Unit)
++ void null()
++ void signIn(String,String,(Boolean) -> Unit)
++ void getCurrentUser((User?) -> Unit)
++ void signOut()
++ void getFavourites(String,(List<TrackVO>) -> Unit)
++ void addTrackToFavourites(void,String,void,TrackVO,void,(Boolean) -> Unit)
++ void null()
++ void deleteFromFavourites(void,String,void,Long,void,(Boolean) -> Unit)
++ void null()
+}
+
+interface com.example.musicapp.data.storage.interfaces.FirebaseStorage {
++ void signUp(String,String,String,Uri,(Boolean) -> Unit)
++ void signIn(String,String,(Boolean) -> Unit)
++ FirebaseUser? getCurrentUser()
++ String getUserNickname(String)
++ void setUserImage(String,String)
++ String? getUserImage(String)
++ List<TrackVO> getUserFavourites(String)
++ void signOut()
++ void addToFavourites(String,TrackVO,(Boolean) -> Unit)
++ void deleteFromFavourites(String,Long,(Boolean) -> Unit)
+}
+
+class com.example.musicapp.data.utils.RoundedCornersTransformation {
++ Bitmap transform(BitmapPool,Bitmap,Int,Int)
++ void updateDiskCacheKey(MessageDigest)
+}
+
+class com.example.musicapp.data.repository.playlist.PlaylistRepositoryImpl {
+}
+interface com.example.musicapp.data.remote.interfaces.MusicApi {
++ Response<SearchResponseDTO> search(String)
++ void track(void)
++ Response<ChartResponseDTO> chart()
++ Response<RadioResponseDTO> radio()
++ void getRadioTracks(void)
++ void getArtistCard(void)
++ void getArtistTopSongs(void)
++ void getArtistAlbums(void)
++ void getAlbumContributors(void)
++ void getArtistAlbumTracks(void)
+}
+
+class com.example.musicapp.data.remote.models.tracks.TrackDTO {
+}
+class com.example.musicapp.data.remote.models.artist.ContributorsResponseDTO {
+}
+class com.example.musicapp.data.repository.artist.ArtistRepositoryImpl {
+}
+
+
+com.example.musicapp.data.storage.interfaces.SearchRequestStorage <|.. com.example.musicapp.data.storage.sharedprefs.SearchRequestSharedPrefsStorage
+ValueEventListener <|.. null
+ValueEventListener <|.. null
+ValueEventListener <|.. null
+com.example.musicapp.domain.repository.FirebaseRepository <|.. com.example.musicapp.data.repository.login.FirebaseRepositoryImpl
+com.bumptech.glide.load.resource.bitmap.BitmapTransformation <|-- com.example.musicapp.data.utils.RoundedCornersTransformation
+@enduml

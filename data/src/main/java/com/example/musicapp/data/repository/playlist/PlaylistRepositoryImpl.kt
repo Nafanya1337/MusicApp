@@ -4,12 +4,14 @@ import android.util.Log
 import com.example.musicapp.data.remote.interfaces.MusicApi
 import com.example.musicapp.data.remote.models.tracks.TrackDTO
 import com.example.musicapp.data.utils.ToDomainUtil.toDomain
-import com.example.musicapp.domain.models.tracks.PlaylistType
-import com.example.musicapp.domain.models.tracks.PlaylistType.*
-import com.example.musicapp.domain.models.tracks.TrackVO
 import com.example.musicapp.domain.models.home.ChartResponseVO
 import com.example.musicapp.domain.models.home.RadioResponseVO
 import com.example.musicapp.domain.models.home.TrackResponseVO
+import com.example.musicapp.domain.models.tracks.PlaylistType
+import com.example.musicapp.domain.models.tracks.PlaylistType.ALBUM
+import com.example.musicapp.domain.models.tracks.PlaylistType.ALL_ARTIST_TRACKS
+import com.example.musicapp.domain.models.tracks.PlaylistType.RADIO
+import com.example.musicapp.domain.models.tracks.TrackVO
 import com.example.musicapp.domain.repository.PlaylistRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -55,6 +57,4 @@ class PlaylistRepositoryImpl(
         }
         return data.map { it.toDomain() }
     }
-
-
 }

@@ -1,7 +1,6 @@
 package com.example.musicapp.presentation.search
 
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -40,7 +39,6 @@ class SearchViewModel(
                 status.postValue(searchResponseVO.status)
                 tracks.postValue(searchResponseVO.list)
             } catch (e: Exception) {
-                Log.e("boobs", e.message.toString())
                 status.postValue(StatusClassVO.INTERNET_FAIL)
                 tracks.postValue(emptyList())
             }
