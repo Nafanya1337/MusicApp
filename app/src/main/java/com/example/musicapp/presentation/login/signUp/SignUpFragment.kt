@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.musicapp.databinding.FragmentSignUpBinding
-import com.example.musicapp.presentation.main.MainActivity
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -93,8 +92,6 @@ class SignUpFragment : Fragment() {
             val text = if (result) "success" else "failed"
             Toast.makeText(requireContext(), "Sign up $text", Toast.LENGTH_SHORT).show()
             if (result) {
-                (activity as MainActivity).initUser()
-                findNavController().popBackStack()
                 findNavController().popBackStack()
             }
         }
