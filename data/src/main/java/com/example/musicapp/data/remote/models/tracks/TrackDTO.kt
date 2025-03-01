@@ -17,6 +17,8 @@ data class TrackDTO(
     @SerializedName("album")
     val album: AlbumInfoDTO?,
     @SerializedName("track_position")
-    val position: Int?
+    val position: Int?,
+    @SerializedName("duration")
+    val duration: Int
 )
 

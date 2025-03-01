@@ -8,11 +8,11 @@ plugins {
 
 android {
     namespace = "com.example.musicapp"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.musicapp"
-        minSdk = 24
+        minSdk = 27
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -57,6 +57,7 @@ dependencies {
     implementation("androidx.fragment:fragment-ktx:1.5.6")
     implementation("com.google.firebase:firebase-database-ktx:21.0.0")
     implementation("com.google.firebase:firebase-storage-ktx:21.0.0")
+    implementation("androidx.lifecycle:lifecycle-livedata-core-ktx:2.6.2")
 
     // Navigation
     val nav_version = "2.7.7"
@@ -119,8 +120,12 @@ dependencies {
 // Optional: AndroidX Test - Mockito Android support (for instrumented tests)
     androidTestImplementation("org.mockito:mockito-android:4.0.0")
 
+    implementation("androidx.media3:media3-ui:1.4.1")
+
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
 
     implementation(kotlin("reflect"))
+
+    implementation("androidx.activity:activity-ktx:1.10.1")
 
 }

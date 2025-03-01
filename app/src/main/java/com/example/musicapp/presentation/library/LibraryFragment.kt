@@ -10,10 +10,11 @@ import com.example.musicapp.presentation.main.MainActivity
 import com.example.musicapp.app.MusicApp
 import com.example.musicapp.databinding.FragmentLibraryBinding
 import com.example.musicapp.domain.models.tracks.TrackListVO
+import com.example.musicapp.presentation.adapter.DisplayMode
 import com.example.musicapp.presentation.utils.SpaceItemDecorationUtil
 
 
-class LibraryFragment : Fragment(), ListTrackAdapter.Clickable {
+class LibraryFragment : Fragment(), ListTrackAdapter.TrackClickable {
 
     lateinit var binding: FragmentLibraryBinding
 
@@ -30,7 +31,10 @@ class LibraryFragment : Fragment(), ListTrackAdapter.Clickable {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        adapter = ListTrackAdapter(title = "Favourites", this, false)
+        adapter = ListTrackAdapter(
+            displayMode = DisplayMode.TRACK_LIST,
+            trackClickableImpl = this
+        )
 
         binding.favRecyclerView.addItemDecoration(SpaceItemDecorationUtil(10, 10))
         binding.favRecyclerView.adapter = adapter

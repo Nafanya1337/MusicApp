@@ -15,7 +15,7 @@ data class CurrentTrackDTO(
     @SerializedName("share")
     val share: String,
     @SerializedName("duration")
-    val duration: Duration,
+    val duration: Int,
     @SerializedName("release_date")
     val releaseDate: String,
     @SerializedName("explicit_lyrics")
@@ -34,9 +34,7 @@ data class AlbumInfoDTO(
     @SerializedName("title")
     val title: String,
     @SerializedName("cover_big")
-    val picture: String,
-    @SerializedName("cover_medium")
-    val pictureBig: String?
+    val picture: String
 )
 
 @Parcelize

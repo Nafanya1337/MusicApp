@@ -2,12 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <solid android:color="?android:navigationBarColor" />
-        </shape>
-    </item>
-    <item android:height="1dp" android:gravity="bottom">
-        <shape>
-            <solid android:color="@color/dark_gray" />
+            <solid android:color="@color/song_card_background_color" />
         </shape>
     </item>
 </layer-list>

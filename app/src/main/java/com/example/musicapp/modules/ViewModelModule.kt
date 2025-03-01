@@ -52,6 +52,7 @@ val ViewModelModule = module {
 
     viewModel {
         MainActivityViewModel(
+            playerManager = get(),
             trackRepository = get(),
             getCurrentUserUseCase = get(),
             addTrackToFavouritesUseCase = get(),

@@ -57,7 +57,8 @@ object ToDomainUtil {
             preview = this.preview,
             album = this.album?.toDomain(),
             artist = this.artist.toDomain(),
-            position = this.position
+            position = this.position,
+            duration = this.duration
         )
     }
 
@@ -81,9 +82,6 @@ object ToDomainUtil {
             id = this.id,
             title = this.title,
             picture = this.picture
-                ?: "https://e-cdns-images.dzcdn.net/images/misc/235ec47f2b21c3c73e02fce66f56ccc5/250x250-000000-80-0-0.jpg",
-            pictureBig = this.pictureBig
-                ?: "https://e-cdns-images.dzcdn.net/images/misc/235ec47f2b21c3c73e02fce66f56ccc5/500x500-000000-80-0-0.jpg",
         )
     }
 

@@ -51,11 +51,7 @@
         android:id="@+id/action_to_playlistFragment"
         app:destination="@id/playlistFragment" />
 
-    <fragment
-        android:id="@+id/settingsFragment"
-        android:name="com.example.musicapp.presentation.settings.SettingsFragment"
-        android:label="fragment_settings"
-        tools:layout="@layout/fragment_settings" />
+
     <fragment
         android:id="@+id/playlistFragment"
         android:name="com.example.musicapp.presentation.playlist.PlaylistFragment"
@@ -72,8 +68,5 @@
         android:name="com.example.musicapp.presentation.account.AccountFragment"
         android:label="fragment_account"
         tools:layout="@layout/fragment_account" >
-        <action
-            android:id="@+id/action_accountFragment2_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
     </fragment>
 </navigation>

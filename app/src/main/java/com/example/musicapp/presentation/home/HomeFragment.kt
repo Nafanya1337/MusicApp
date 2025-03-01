@@ -6,12 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.PagerSnapHelper
 import com.bumptech.glide.Glide
-import com.example.musicapp.presentation.utils.DiffUtilCallback
 import com.example.musicapp.presentation.adapter.ListTrackAdapter
 import com.example.musicapp.presentation.main.MainActivity
 import com.example.musicapp.app.MusicApp
@@ -21,10 +23,13 @@ import com.example.musicapp.databinding.FragmentHomeBinding
 import com.example.musicapp.domain.models.tracks.TrackListVO
 import com.example.musicapp.domain.models.tracks.TrackVO
 import com.example.musicapp.domain.models.home.RadioVO
+import com.example.musicapp.presentation.adapter.DisplayMode
+import com.example.musicapp.presentation.utils.DiffUtilCallback
 import com.example.musicapp.presentation.utils.SpaceItemDecorationUtil
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class HomeFragment : Fragment(), ListTrackAdapter.Clickable, PlaylistAdapter.Clickable {
+class HomeFragment : Fragment(), ListTrackAdapter.TrackClickable,
+    ListTrackAdapter.PlaylistCardClickable {
 
     private lateinit var binding: FragmentHomeBinding
 
@@ -38,8 +43,6 @@ class HomeFragment : Fragment(), ListTrackAdapter.Clickable, PlaylistAdapter.Cli
         return binding.root
     }
 
-    private var adapter: ListTrackAdapter? = null
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -47,10 +50,11 @@ class HomeFragment : Fragment(), ListTrackAdapter.Clickable, PlaylistAdapter.Cli
             findNavController().navigate(R.id.action_homeFragment_to_accountFragment2)
         }
 
-        adapter = ListTrackAdapter(
-            title = "Charts",
-            this,
-            diffUtilCallback = DiffUtilCallback(emptyList(), emptyList()
+        binding.chartsRecyclerView.adapter = ListTrackAdapter(
+            displayMode = DisplayMode.TRACK_LIST,
+            trackClickableImpl = this,
+            diffUtilCallback = DiffUtilCallback(
+                emptyList(), emptyList()
             ) { old, new ->
                 if (old is TrackVO && new is TrackVO)
                     old.id == new.id
@@ -59,8 +63,18 @@ class HomeFragment : Fragment(), ListTrackAdapter.Clickable, PlaylistAdapter.Cli
             }
         )
 
-        binding.chartsRecyclerView.adapter = adapter
-        binding.recommendationsRecyclerView.adapter = PlaylistAdapter(emptyList(), this)
+        binding.recommendationsRecyclerView.adapter = ListTrackAdapter(
+            displayMode = DisplayMode.PLAYLIST_CARDS,
+            playlistCardClickableImpl = this,
+            diffUtilCallback = DiffUtilCallback(
+                emptyList(), emptyList()
+            ) { old, new ->
+                if (old is RadioVO && new is RadioVO)
+                    old.id == new.id
+                else
+                    old == new
+            }
+        )
         binding.chartsRecyclerView.layoutManager =
             GridLayoutManager(activity, 3, GridLayoutManager.HORIZONTAL, false)
         homeViewModel.init()
@@ -73,19 +87,22 @@ class HomeFragment : Fragment(), ListTrackAdapter.Clickable, PlaylistAdapter.Cli
                     .into(binding.profileImage)
             }
         }
+
         homeViewModel.chartList.observe(viewLifecycleOwner) { chart ->
-            adapter?.list = chart.list
+            (binding.chartsRecyclerView.adapter as ListTrackAdapter).list = chart.list
             if (chart.list.isNotEmpty())
                 binding.chartProgressBar.visibility = View.GONE
         }
+
         homeViewModel.recommendationsList.observe(viewLifecycleOwner) { radio ->
-            ((binding.recommendationsRecyclerView.adapter) as PlaylistAdapter).playlistList = radio
-            ((binding.recommendationsRecyclerView.adapter) as PlaylistAdapter).notifyDataSetChanged()
+            ((binding.recommendationsRecyclerView.adapter) as ListTrackAdapter).list = radio
             if (radio.isNotEmpty())
                 binding.radioProgrssBar.visibility = View.GONE
         }
-        binding.chartsRecyclerView.addItemDecoration(SpaceItemDecorationUtil(5, 10))
-        binding.recommendationsRecyclerView.addItemDecoration(SpaceItemDecorationUtil(20, 10))
+
+        binding.chartsRecyclerView.addItemDecoration(SpaceItemDecorationUtil(5, 10, 3))
+        binding.recommendationsRecyclerView.addItemDecoration(SpaceItemDecorationUtil(20, 10, 2))
+
         binding.recommendationsRecyclerView.layoutManager =
             GridLayoutManager(activity, 2, GridLayoutManager.HORIZONTAL, false)
         PagerSnapHelper().attachToRecyclerView(binding.chartsRecyclerView)
@@ -96,7 +113,7 @@ class HomeFragment : Fragment(), ListTrackAdapter.Clickable, PlaylistAdapter.Cli
         (activity as MainActivity).startNewTrackList(trackList = trackList, position = position)
     }
 
-    override fun onItemClicked(radio: RadioVO) {
+    override fun onItemClick(radio: RadioVO) {
         val action = HomeFragmentDirections.actionToPlaylistFragment(radio.toData())
         findNavController().navigate(action)
     }

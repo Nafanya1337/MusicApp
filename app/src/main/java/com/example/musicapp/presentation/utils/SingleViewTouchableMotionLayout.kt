@@ -11,7 +11,7 @@ import com.example.musicapp.R
 class SingleViewTouchableMotionLayout(context: Context, attributeSet: AttributeSet? = null) : MotionLayout(context, attributeSet) {
 
     private val viewToDetectTouch by lazy {
-        findViewById<View>(R.id.constraintImage) //TODO move to Attributes
+        findViewById<View>(R.id.playerBackground) //TODO move to Attributes
     }
 
     private val viewRect = Rect()

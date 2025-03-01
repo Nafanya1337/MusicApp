@@ -14,5 +14,11 @@
         <item name="android:windowTranslucentNavigation">false</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
+
     <style name="Theme.MusicApp" parent="Base.Theme.MusicApp" />
+
+    <style name="ThemeOverlay.MusicApp.FullscreenContainer" parent="">
+        <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
+        <item name="fullscreenTextColor">@color/light_blue_A200</item>
+    </style>
 </resources>

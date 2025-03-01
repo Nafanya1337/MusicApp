@@ -32,19 +32,5 @@ class TrackRepositoryImpl(
             streamTrack(id = currentId)
         }
     }
-
-    override suspend fun getNext(): CurrentTrackVO? {
-        currentId += 1
-        return withContext(Dispatchers.IO) {
-            streamTrack(id = currentId)
-        }
-    }
-
-    override suspend fun getPrevious(): CurrentTrackVO? {
-        currentId -= 1
-        return withContext(Dispatchers.IO) {
-            streamTrack(id = currentId)
-        }
-    }
 }
 

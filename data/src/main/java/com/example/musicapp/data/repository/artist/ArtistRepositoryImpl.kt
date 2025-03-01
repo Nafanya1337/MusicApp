@@ -49,7 +49,8 @@ class ArtistRepositoryImpl(
             preview = this.preview,
             artist = this.artist.toDomain(),
             album = this.album?.toDomain(),
-            position = this.position
+            position = this.position,
+            duration = this.duration
         )
     }
 }

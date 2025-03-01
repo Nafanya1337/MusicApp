@@ -5,7 +5,6 @@
     android:id="@+id/home_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
     android:scrollbarSize="0dp"
     tools:context=".presentation.home.HomeFragment">
 
@@ -20,6 +19,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="5dp"
             app:cardCornerRadius="50dp"
+            android:layout_marginEnd="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent">
             <ImageView
@@ -43,12 +43,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/charts_header"
+            android:layout_marginStart="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@+id/guideline_Header" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/chartsRecyclerView"
             android:layout_width="match_parent"
+            android:paddingHorizontal="10dp"
+            android:clipToPadding="false"
             android:layout_height="170dp"
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
@@ -58,6 +61,7 @@
             app:layout_constraintTop_toBottomOf="@id/chartsTextView" />
 
         <TextView
+            android:layout_marginStart="10dp"
             android:id="@+id/recommendationsTextView"
             style="@style/Header_Text_Home"
             android:layout_width="wrap_content"
@@ -74,6 +78,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:minHeight="150dp"
+            android:paddingHorizontal="10dp"
+            android:clipToPadding="false"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             app:layout_constraintEnd_toEndOf="parent"

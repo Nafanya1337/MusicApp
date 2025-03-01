@@ -9,7 +9,7 @@
     tools:ignore="contentDescription">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/constraintImage"
+        android:id="@+id/playerBackground"
         android:layout_width="match_parent"
         android:layout_height="105dp"
         android:background="@drawable/bg_player_selector"
@@ -24,9 +24,9 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_marginStart="10dp"
-        app:layout_constraintBottom_toBottomOf="@id/constraintImage"
-        app:layout_constraintStart_toStartOf="@id/constraintImage"
-        app:layout_constraintTop_toTopOf="@id/constraintImage"
+        app:layout_constraintBottom_toBottomOf="@id/playerBackground"
+        app:layout_constraintStart_toStartOf="@id/playerBackground"
+        app:layout_constraintTop_toTopOf="@id/playerBackground"
         tools:srcCompat="@tools:sample/avatars" />
 
 
@@ -72,16 +72,16 @@
         android:layout_marginEnd="25dp"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintBottom_toBottomOf="@id/constraintImage"
-        app:layout_constraintEnd_toEndOf="@id/constraintImage"
-        app:layout_constraintTop_toTopOf="@id/constraintImage"
+        app:layout_constraintBottom_toBottomOf="@id/playerBackground"
+        app:layout_constraintEnd_toEndOf="@id/playerBackground"
+        app:layout_constraintTop_toTopOf="@id/playerBackground"
         app:srcCompat="@drawable/selector_play_pause" />
 
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation_menu"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="65dp"
         android:foreground="@drawable/rounded_corner_menu"
         app:itemActiveIndicatorStyle="@color/purple"
         app:itemIconTint="@color/bottom_nav_item_selector"

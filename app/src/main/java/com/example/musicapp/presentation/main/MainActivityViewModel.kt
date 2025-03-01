@@ -1,8 +1,15 @@
 package com.example.musicapp.presentation.main
 
+import androidx.annotation.OptIn
+import androidx.core.net.toUri
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.media3.common.C
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
+import androidx.media3.common.util.UnstableApi
 import com.example.musicapp.app.MusicApp.Companion.userFav
 import com.example.musicapp.domain.models.tracks.CurrentTrackVO
 import com.example.musicapp.domain.models.tracks.TrackListVO
@@ -14,6 +21,7 @@ import com.example.musicapp.domain.usecase.login.GetCurrentUserUseCase
 import com.example.musicapp.domain.usecase.track.AddTrackToFavouritesUseCase
 import com.example.musicapp.domain.usecase.track.DeleteFromFavouriteUseCase
 import com.example.musicapp.domain.usecase.track.GetFavouritesUseCase
+import com.example.musicapp.manager.PlayerManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
@@ -22,123 +30,106 @@ class MainActivityViewModel(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val addTrackToFavouritesUseCase: AddTrackToFavouritesUseCase,
     private val getFavouritesUseCase: GetFavouritesUseCase,
-    private val deleteFromFavouriteUseCase: DeleteFromFavouriteUseCase
+    private val deleteFromFavouriteUseCase: DeleteFromFavouriteUseCase,
+    private val playerManager: PlayerManager
 ) : ViewModel() {
 
-    val track = MutableLiveData<CurrentTrackVO?>(null)
-    val isPlaying = MutableLiveData<Boolean>()
-    val currentPlaylist = MutableLiveData<TrackListVO>()
-    val currentPosition = MutableLiveData<Int>()
-    val nextButtonEnabled = MutableLiveData<Boolean>()
-    val prevButtonEnabled = MutableLiveData<Boolean>()
-    val looping = MutableLiveData<LoopinType>(LoopinType.NONE)
-    val user = MutableLiveData<User?>()
+    private val _state = MutableLiveData<PlayerState>()
+    val state: LiveData<PlayerState> = _state
 
+    private val _user = MutableLiveData<User?>()
+    val user: LiveData<User?> = _user
 
-    fun updateButtonStates() {
-        val playlist = currentPlaylist.value?.list
-        val position = currentPosition.value ?: 0
-        nextButtonEnabled.value = position < (playlist?.size?.minus(1) ?: 0)
-        prevButtonEnabled.value = position != 0
-    }
+    private val _trackList = MutableLiveData<TrackListVO>()
 
-    fun addToFav(callback: (Boolean) -> Unit) {
-        val uid = user.value?.id
-        val track = track.value?.toTrackVO()
-        if (uid != null && track != null) {
-            viewModelScope.launch(Dispatchers.IO) {
-                addTrackToFavouritesUseCase.execute(uid = uid, track = track) {
-                    if (it) {
-                        getFav()
+    private val trackMap = mutableMapOf<Long, CurrentTrackVO>()
+
+    private val _currentTrack = MutableLiveData<CurrentTrackVO>()
+    val currentTrack: LiveData<CurrentTrackVO> = _currentTrack
+
+    private val _playbackPosition = MutableLiveData<Int>()
+    val playbackPosition: LiveData<Int> = _playbackPosition
+
+    init {
+        viewModelScope.launch {
+            playerManager.playerState.collect { state ->
+                if (state.mediaItem != null) {
+                    _state.value = state
+                    if (currentTrack.value == null || currentTrack.value?.id != state.mediaItem.mediaId.toLong()) {
+                        streamCurrentTrack(state.mediaItem.mediaId.toLong())
                     }
-                    callback(it)
                 }
+            }
+        }
+
+        viewModelScope.launch {
+            playerManager.playbackPosition.collect { position ->
+                val pos = (position / 1000).toInt()
+                _playbackPosition.value = pos
             }
         }
     }
 
-    fun changeLoopingType() {
-        looping.value?.let {
-            this.looping.value = it.nextLoopType()
-        }
-    }
-
-    fun deleteFromFav(callback: (Boolean) -> Unit) {
-        val uid = user.value?.id
-        val track = track.value?.toTrackVO()
-        if (uid != null && track != null) {
-            viewModelScope.launch(Dispatchers.IO) {
-                deleteFromFavouriteUseCase.execute(uid = uid, trackId = track.id) {
-                    if (it) {
-                        getFav()
-                    }
-                    callback(it)
+    private fun streamCurrentTrack(id: Long) {
+        viewModelScope.launch {
+            if (!trackMap.containsKey(id)) {
+                val track = trackRepository.streamTrack(id)
+                track?.let {
+                    trackMap.put(
+                        id,
+                        it.copy(
+                            contributors = it.contributors.distinctBy { it.id },
+                            duration = (_state.value!!.duration / 1000).toInt()
+                        )
+                    )
                 }
             }
+            _currentTrack.value = trackMap[id]
         }
     }
 
-    suspend fun playTrack(id: Long) {
+    fun changePlayPauseState() = when (_state.value?.isPLaying) {
+        true -> playerManager.pause()
+        false -> playerManager.play()
+        null -> {}
+    }
+
+    fun setPlayList(tracks: TrackListVO, positionOfCurrentTrack: Int) {
         try {
-            track.postValue(trackRepository.streamTrack(id = id))
-            if (track != null) {
-                isPlaying.postValue(true)
-            }
+            loadPlaylistToPlayerManager(tracks, positionOfCurrentTrack)
+            trackMap.clear()
+            setCurrentTrackList(tracks)
         } catch (e: Exception) {
-            track.postValue(null)
-            isPlaying.postValue(false)
+
         }
     }
 
-    fun playPause() {
-        isPlaying.value = !isPlaying.value!!
-    }
-
-    fun setCurrentTrackList(trackList: TrackListVO) {
-        currentPlaylist.value = trackList
-    }
-
-    fun setCurrentPosition(position: Int) {
-        currentPosition.value = position
-        updateButtonStates()
-    }
-
-    fun autoNextPosition() {
-        when (looping.value) {
-            LoopinType.NONE -> nextPositionByClick()
-            LoopinType.TRACK -> setCurrentPosition(currentPosition.value!!)
-            LoopinType.PLAYLIST -> setCurrentPosition(0)
-            null -> {}
+    fun loadPlaylistToPlayerManager(tracks: TrackListVO, positionOfCurrentTrack: Int) {
+        viewModelScope.launch {
+            val mediaItems = tracks.list.map { (it as TrackVO).toMediaItem() }
+            playerManager.setPlaylist(mediaItems, positionOfCurrentTrack)
         }
     }
 
-    fun nextPositionByClick() {
-        if (currentPosition.value != currentPlaylist.value?.list?.size?.minus(1))
-            currentPosition.value?.plus(1)?.let { this.setCurrentPosition(it) }
-        else
-            playPause()
-    }
-
-    fun prevPosition() {
-        if (currentPosition.value != 0)
-            currentPosition.value?.minus(1)?.let { this.setCurrentPosition(it) }
-    }
-
-    fun getUser() {
+    fun initUser() {
         viewModelScope.launch(Dispatchers.IO) {
             getCurrentUserUseCase.execute { data ->
-                this@MainActivityViewModel.user.postValue(data)
+                this@MainActivityViewModel._user.postValue(data)
             }
         }
     }
 
-    fun getFav() {
+    fun initFav() {
         viewModelScope.launch(Dispatchers.IO) {
-            userFav.postValue(user.value?.id?.let {
+            userFav.postValue(_user.value?.id?.let {
                 getFavouritesUseCase.execute(it)
                     .toMutableList()
             })
         }
+    }
+
+    private fun setCurrentTrackList(trackList: TrackListVO) {
+        _trackList.value = trackList
     }
 
     fun CurrentTrackVO.toTrackVO(): TrackVO {
@@ -154,21 +145,22 @@ class MainActivityViewModel(
                 picture = this.contributors[0].picture
             ),
             album = this.album,
-            position = null
+            position = null,
+            duration = duration
         )
     }
-
-    enum class LoopinType {
-        NONE,
-        TRACK,
-        PLAYLIST;
-
-        fun nextLoopType(): LoopinType {
-            return when (this) {
-                NONE -> PLAYLIST
-                PLAYLIST -> TRACK
-                TRACK -> NONE
-            }
-        }
-    }
 }
+
+@OptIn(UnstableApi::class)
+fun TrackVO.toMediaItem() = MediaItem.Builder()
+    .setMediaId(id.toString())
+    .setUri(preview)
+    .setMediaMetadata(
+        MediaMetadata.Builder()
+            .setTitle(title)
+            .setArtist(this.artist.name)
+            .setArtworkUri(album?.picture?.toUri())
+            .setDurationMs((duration * 1000).toLong())
+            .build()
+    )
+    .build()

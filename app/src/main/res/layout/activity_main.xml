@@ -5,23 +5,25 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
+    android:clipToPadding="false"
+    android:fitsSystemWindows="false"
     tools:context=".presentation.main.MainActivity">
 
-    <!-- Используйте FrameLayout для того, чтобы можно было наложить один фрагмент на другой -->
     <FrameLayout
+        android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <fragment
-            android:id="@+id/fragmentContainer"
+            android:id="@+id/container"
             android:name="androidx.navigation.fragment.NavHostFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:clipChildren="false"
             app:defaultNavHost="true"
             app:navGraph="@navigation/nav_graph" />
 
-        <!-- Мини-плеер будет наложен поверх NavHostFragment -->
         <include
             android:id="@+id/mini_player_layout"
             layout="@layout/mini_player_layout"
@@ -29,6 +31,5 @@
             android:layout_height="match_parent"
             android:layout_gravity="bottom"
             />
-
     </FrameLayout>
 </LinearLayout>

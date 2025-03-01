@@ -9,5 +9,6 @@ data class TrackVO(
     val preview: String = "",
     val artist: ArtistVO = ArtistVO(0,"", null, null),
     var album: AlbumInfoVO? = null,
-    val position: Int? = null
+    val position: Int? = null,
+    val duration: Int
 ) : Playlistable

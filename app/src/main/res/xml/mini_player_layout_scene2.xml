@@ -5,32 +5,45 @@
     <Transition
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@+id/start"
-        motion:duration="500"
-        motion:motionInterpolator="easeInOut">
+        motion:duration="400"
+        motion:motionInterpolator="fastOutSlowIn">
 
         <OnSwipe
             motion:dragDirection="dragUp"
-            motion:touchAnchorId="@+id/constraintImage"
+            motion:onTouchUp="autoComplete"
+            motion:touchAnchorId="@id/playerBackground"
             motion:touchAnchorSide="top" />
 
         <KeyFrameSet>
+            <KeyAttribute
+                motion:motionTarget="@id/currentTrack_trackImage"
+                motion:framePosition="0"
+                android:scaleX="0.8"
+                android:scaleY="0.8"/>
+            <KeyAttribute
+                motion:motionTarget="@id/currentTrack_trackImage"
+                motion:framePosition="100"
+                android:scaleX="1.0"
+                android:scaleY="1.0"/>
 
 
             <KeyAttribute
                 motion:motionTarget="@id/trackProgressBar"
-                motion:framePosition="80"
-                android:scaleX="0"
+                motion:framePosition="50"
                 android:alpha="0"/>
             <KeyAttribute
                 motion:motionTarget="@id/trackProgressBar"
+                motion:framePosition="75"
+                android:alpha="0.5"/>
+            <KeyAttribute
+                motion:motionTarget="@id/trackProgressBar"
                 motion:framePosition="100"
-                android:scaleX="1"
                 android:alpha="1"/>
 
 
             <KeyAttribute
                 motion:motionTarget="@id/fullscreen_trackLength"
-                motion:framePosition="85"
+                motion:framePosition="95"
                 android:alpha="0"/>
             <KeyAttribute
                 motion:motionTarget="@id/fullscreen_trackLength"
@@ -39,7 +52,7 @@
 
             <KeyAttribute
                 motion:motionTarget="@id/fullscreen_currentPosition"
-                motion:framePosition="85"
+                motion:framePosition="95"
                 android:alpha="0"/>
             <KeyAttribute
                 motion:motionTarget="@id/fullscreen_currentPosition"
@@ -49,30 +62,26 @@
 
             <KeyAttribute
                 motion:motionTarget="@id/button_previous"
-                motion:framePosition="50"
-                android:translationX="-20dp"
+                motion:framePosition="90"
                 android:alpha="0"/>
             <KeyAttribute
                 motion:motionTarget="@id/button_previous"
                 motion:framePosition="100"
-                android:translationX="0dp"
                 android:alpha="1"/>
 
             <KeyAttribute
                 motion:motionTarget="@id/button_next"
-                motion:framePosition="50"
-                android:translationX="20dp"
+                motion:framePosition="90"
                 android:alpha="0"/>
             <KeyAttribute
                 motion:motionTarget="@id/button_next"
                 motion:framePosition="100"
-                android:translationX="0dp"
                 android:alpha="1"/>
 
 
             <KeyAttribute
                 motion:motionTarget="@id/button_like"
-                motion:framePosition="50"
+                motion:framePosition="90"
                 android:alpha="0"/>
             <KeyAttribute
                 motion:motionTarget="@id/button_like"
@@ -84,7 +93,7 @@
 
     <ConstraintSet android:id="@id/end">
         <Constraint
-            android:id="@id/constraintImage"
+            android:id="@id/playerBackground"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:focusable="true"
@@ -95,13 +104,16 @@
 
         <Constraint
             android:id="@id/currentTrack_trackImage"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:layout_marginTop="80dp"
+            android:layout_width="365dp"
+            android:layout_height="365dp"
+            android:layout_marginTop="65dp"
+            android:layout_marginStart="35dp"
+            android:layout_marginEnd="35dp"
+            android:layout_marginBottom="65dp"
             motion:layout_constraintBottom_toTopOf="@id/currentTrack_trackName"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toTopOf="parent"
+            motion:layout_constraintTop_toBottomOf="@id/playlist_name"
             motion:layout_constraintVertical_chainStyle="packed" />
 
         <Constraint
@@ -115,7 +127,7 @@
             style="@style/FullScreenPlayerSongName"
             motion:layout_constraintEnd_toStartOf="@id/currentTrack_explicit_content_icon"
             motion:layout_constraintStart_toStartOf="@id/currentTrack_trackImage"
-            motion:layout_constraintTop_toBottomOf="@id/currentTrack_trackImage"
+            motion:layout_constraintBottom_toTopOf="@id/currentTrack_artistName"
             motion:layout_constraintHorizontal_chainStyle="packed"/>
 
         <Constraint
@@ -139,7 +151,7 @@
             android:textSize="20sp"
             motion:layout_constraintEnd_toEndOf="@id/currentTrack_explicit_content_icon"
             motion:layout_constraintStart_toStartOf="@id/currentTrack_trackName"
-            motion:layout_constraintTop_toBottomOf="@id/currentTrack_trackName" />
+            motion:layout_constraintBottom_toTopOf="@id/trackProgressBar" />
 
         <Constraint
             android:id="@id/fullscreen_trackLength"
@@ -236,7 +248,7 @@
             android:visibility="visible"
             motion:layout_constraintEnd_toEndOf="@id/currentTrack_trackImage"
             motion:layout_constraintStart_toStartOf="@id/currentTrack_trackImage"
-            motion:layout_constraintBottom_toTopOf="@id/currentTrack_trackImage"/>
+            motion:layout_constraintTop_toBottomOf="@id/now_playing_Header"/>
 
         <Constraint
             android:id="@id/now_playing_Header"
@@ -246,9 +258,10 @@
             android:textSize="16sp"
             android:layout_marginBottom="10dp"
             android:visibility="visible"
-            motion:layout_constraintEnd_toEndOf="@+id/playlist_name"
-            motion:layout_constraintStart_toStartOf="@+id/playlist_name"
-            motion:layout_constraintBottom_toTopOf="@+id/playlist_name"/>
+            android:layout_marginTop="35dp"
+            motion:layout_constraintEnd_toEndOf="@id/playlist_name"
+            motion:layout_constraintStart_toStartOf="@id/playlist_name"
+            motion:layout_constraintTop_toTopOf="parent"/>
 
         <Constraint
             android:id="@id/bottom_navigation_menu"
@@ -263,7 +276,7 @@
     <ConstraintSet android:id="@id/start">
 
         <Constraint
-            android:id="@id/constraintImage"
+            android:id="@id/playerBackground"
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginHorizontal="5dp"
@@ -272,6 +285,6 @@
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintBottom_toTopOf="@+id/bottom_navigation_menu" />
-
     </ConstraintSet>
+
 </MotionScene>

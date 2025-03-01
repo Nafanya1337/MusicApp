@@ -7,19 +7,18 @@ data class CurrentTrackVO(
     val title: String,
     val link: String,
     val share: String,
-    val duration: Duration,
+    val duration: Int,
     val releaseDate: String,
     val explicitLyrics: Boolean,
     val preview: String,
     val contributors: List<ContributorsVO>,
-    val album: AlbumInfoVO
+    val album: AlbumInfoVO,
 )
 
 data class AlbumInfoVO(
     val id: Long = 0,
     val title: String = "",
-    val picture: String = "",
-    val pictureBig: String? = null
+    val picture: String = ""
 )
 
 data class ContributorsVO(

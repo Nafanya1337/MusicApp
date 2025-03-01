@@ -11,8 +11,4 @@ interface TrackRepository {
     fun getTrackInfo(id: Long)
 
     suspend fun getCurrent(): CurrentTrackVO?
-
-    suspend fun getNext(): CurrentTrackVO?
-
-    suspend fun getPrevious(): CurrentTrackVO?
 }

@@ -1,128 +1,153 @@
 package com.example.musicapp.presentation.main
 
-import android.content.ComponentName
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.View
-import android.widget.SeekBar
-import android.widget.Toast
-import androidx.annotation.RequiresApi
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
 import androidx.core.os.bundleOf
-import androidx.core.view.WindowCompat
-import androidx.media3.common.MediaItem
-import androidx.media3.common.MediaMetadata
-import androidx.media3.common.Player
-import androidx.media3.session.MediaController
-import androidx.media3.session.SessionToken
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.musicapp.R
 import com.example.musicapp.app.MusicApp
-import com.example.musicapp.app.MusicApp.Companion.userFav
 import com.example.musicapp.data.remote.models.tracks.ContributorsDTO
 import com.example.musicapp.data.utils.RoundedCornersTransformation
 import com.example.musicapp.databinding.ActivityMainBinding
-import com.example.musicapp.domain.models.artist.ArtistVO
 import com.example.musicapp.domain.models.tracks.ContributorsVO
 import com.example.musicapp.domain.models.tracks.CurrentTrackVO
 import com.example.musicapp.domain.models.tracks.TrackListVO
-import com.example.musicapp.domain.models.tracks.TrackVO
 import com.example.musicapp.presentation.artist.ArtistsBottomSheetFragment
 import com.example.musicapp.presentation.artist.CONTRIBUTORS_CHOOSE_KEY
 import com.example.musicapp.presentation.artist.CONTRIBUTORS_REQUEST_KEY
-import com.example.musicapp.service.MusicService
-import com.google.common.util.concurrent.MoreExecutors
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.musicapp.service.AudioPlayerService
 import org.koin.androidx.viewmodel.ext.android.viewModel
-
+import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityMainBinding
-
-    private val sessionToken by lazy {
-        SessionToken(
-            applicationContext,
-            ComponentName(applicationContext, MusicService::class.java)
-        )
-    }
-
-    private var progressBarUpdateJob: Job? = null
-
-    private val controllerFuture by lazy {
-        MediaController.Builder(applicationContext, sessionToken).buildAsync()
-    }
-
+    private val binding: ActivityMainBinding by lazy { ActivityMainBinding.inflate(layoutInflater) }
     private val mainActivityViewModel: MainActivityViewModel by viewModel<MainActivityViewModel>()
+    val navController by lazy { findNavController(R.id.container) }
 
-    val navController by lazy { findNavController(R.id.fragmentContainer) }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        WindowCompat.setDecorFitsSystemWindows(
-            window,
-            false
-        )
-        initUser()
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-        val navView = binding.miniPlayerLayout.bottomNavigationMenu
-        NavigationUI.setupWithNavController(navView, navController)
 
-        mainActivityViewModel.user.observe(this) { data ->
-            if (data == null) {
+        setContentView(binding.root)
+
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.container) as NavHostFragment
+
+        ViewCompat.setOnApplyWindowInsetsListener(navHostFragment.requireView()) { v, insets ->
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+                        or WindowInsetsCompat.Type.displayCutout()
+            )
+            v.updatePadding(
+                left = bars.left,
+                top = bars.top,
+                right = bars.right,
+                bottom = bars.bottom,
+            )
+            WindowInsetsCompat.CONSUMED
+        }
+
+        window.statusBarColor = Color.TRANSPARENT
+
+        setupNavigation()
+        setupObservers()
+
+        initUser()
+    }
+
+    private fun setupNavigation() {
+        NavigationUI.setupWithNavController(
+            binding.miniPlayerLayout.bottomNavigationMenu,
+            navController
+        )
+    }
+
+    private fun setupObservers() {
+        mainActivityViewModel.user.observe(this) { user ->
+            if (user == null) {
                 binding.miniPlayerLayout.root.visibility = View.GONE
                 navController.navigate(R.id.action_homeFragment_to_auth_nav_graph)
             } else {
-                MusicApp.user.value = data
-                mainActivityViewModel.getFav()
+                MusicApp.user.value = user
+                mainActivityViewModel.initFav()
                 initUI()
             }
         }
 
-        binding.miniPlayerLayout.buttonLoop.setOnClickListener {
-            mainActivityViewModel.changeLoopingType()
+        mainActivityViewModel.state.observe(this) { state ->
+            updatePlayerStateUI(state)
         }
 
-        mainActivityViewModel.looping.observe(this) { type ->
-            when (type) {
-                MainActivityViewModel.LoopinType.NONE -> {
-                    binding.miniPlayerLayout.buttonLoop.setBackgroundResource(R.drawable.loop_button_passive)
-                }
-                MainActivityViewModel.LoopinType.TRACK -> {
-                    binding.miniPlayerLayout.buttonLoop.setBackgroundResource(R.drawable.loop_button_active_current)
-                }
-                MainActivityViewModel.LoopinType.PLAYLIST -> {
-                    binding.miniPlayerLayout.buttonLoop.setBackgroundResource(R.drawable.loop_button_active_all)
-                }
-            }
-            binding.miniPlayerLayout.buttonLoop.refreshDrawableState()
+        mainActivityViewModel.playbackPosition.observe(this) { playbackPosition ->
+            updatePlayerPlaybackPosition(playbackPosition.toInt())
         }
+
+        mainActivityViewModel.currentTrack.observe(this) { track ->
+            if (track != null)
+                updatePlayerTrackUI(track)
+        }
+    }
+
+    private fun updatePlayerStateUI(state: PlayerState) {
+        binding.miniPlayerLayout.apply {
+            currentTrackPlayPauseIcon.isSelected = state.isPLaying
+        }
+    }
+
+    private fun updatePlayerTrackUI(track: CurrentTrackVO) {
+        binding.miniPlayerLayout.apply {
+            currentTrackArtistName.text = track.contributors.joinToString { it.name }
+            currentTrackTrackName.text = track.title
+
+            changeVisibilityOfExplicitIcon(track.explicitLyrics.toVisibility())
+
+            Glide.with(this@MainActivity)
+                .load(track.album.picture)
+                .override(500, 500)
+                .transform(RoundedCornersTransformation(20))
+                .into(currentTrackTrackImage)
+
+            fullscreenTrackLength.text = totalSecondsToMinutesAndSeconds(track.duration)
+            trackProgressBar.max = track.duration
+            updatePlayerPlaybackPosition(0)
+        }
+    }
+
+    private fun changeVisibilityOfExplicitIcon(visibility: Int) {
+        val constraintSetEnd = binding.miniPlayerLayout.root.getConstraintSet(R.id.end)
+        val constraintSetStart = binding.miniPlayerLayout.root.getConstraintSet(R.id.start)
+        constraintSetEnd.setVisibility(R.id.currentTrack_explicit_content_icon, visibility)
+        constraintSetStart.setVisibility(R.id.currentTrack_explicit_content_icon, visibility)
+        binding.miniPlayerLayout.root.updateState(R.id.end, constraintSetEnd)
+        binding.miniPlayerLayout.root.updateState(R.id.start, constraintSetStart)
+    }
+
+    private fun totalSecondsToMinutesAndSeconds(totalSeconds: Int): String {
+        val minutes = totalSeconds / 60
+        val seconds = totalSeconds % 60
+        return String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds)
+    }
+
+    private fun updatePlayerPlaybackPosition(position: Int) {
+        binding.miniPlayerLayout.trackProgressBar.setProgress(position, true)
+        binding.miniPlayerLayout.fullscreenCurrentPosition.text = totalSecondsToMinutesAndSeconds(position)
     }
 
     fun initUser() {
-        mainActivityViewModel.getUser()
-    }
-
-    fun startNewTrackList(trackList: TrackListVO, position: Int = 0) {
-        startUpdatingProgressBar()
-        mainActivityViewModel.setCurrentTrackList(trackList = trackList)
-        mainActivityViewModel.setCurrentPosition(position)
+        mainActivityViewModel.initUser()
     }
 
     private fun initUI() {
-
         binding.miniPlayerLayout.root.visibility = View.VISIBLE
 
         binding.miniPlayerLayout.bottomNavigationMenu.setBackgroundColor(
@@ -132,265 +157,78 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
-        binding.miniPlayerLayout.trackProgressBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                if (fromUser) {
-                    val controller = controllerFuture.get() as? MediaController
-                    controller?.let {
-                        val position = it.duration * progress / 100
-                        it.seekTo(position)
-                    }
-                }
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
-            }
-
-            override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
-            }
-        })
-
-        mainActivityViewModel.nextButtonEnabled.observe(this) { isEnabled ->
-            binding.miniPlayerLayout.buttonNext.isEnabled = isEnabled
-        }
-
-        mainActivityViewModel.prevButtonEnabled.observe(this) { isEnabled ->
-            binding.miniPlayerLayout.buttonPrevious.isEnabled = isEnabled
-        }
-
-        binding.miniPlayerLayout.buttonNext.setOnClickListener {
-            mainActivityViewModel.nextPositionByClick()
-        }
-
-        binding.miniPlayerLayout.buttonPrevious.setOnClickListener {
-            mainActivityViewModel.prevPosition()
-        }
-
-        binding.miniPlayerLayout.buttonLike.setOnClickListener {
-            if (!it.isSelected) {
-                mainActivityViewModel.addToFav {
-                    if (!it) {
-                        Toast.makeText(this, "Error when adding to favourites", Toast.LENGTH_SHORT)
-                            .show()
-
-                    } else {
-                        Toast.makeText(this, "added", Toast.LENGTH_SHORT).show()
-                        binding.miniPlayerLayout.buttonLike.isSelected =
-                            !binding.miniPlayerLayout.buttonLike.isSelected
-                    }
-                }
-            } else {
-                mainActivityViewModel.deleteFromFav {
-                    if (!it) {
-                        Toast.makeText(
-                            this,
-                            "Error when deleting to favourites",
-                            Toast.LENGTH_SHORT
-                        )
-                            .show()
-                    } else {
-                        Toast.makeText(this, "deleted", Toast.LENGTH_SHORT).show()
-                        binding.miniPlayerLayout.buttonLike.isSelected =
-                            !binding.miniPlayerLayout.buttonLike.isSelected
-                    }
-                }
-            }
-        }
-
 
         binding.miniPlayerLayout.currentTrackArtistName.setOnClickListener {
-            val artists: List<ContributorsVO> = mainActivityViewModel.track.value!!.contributors
-            val bottomSheetFragment: ArtistsBottomSheetFragment =
-                ArtistsBottomSheetFragment.newInstance(artists)
-            supportFragmentManager.setFragmentResultListener(
-                CONTRIBUTORS_CHOOSE_KEY,
-                this
-            ) { key, bundle ->
-                val contributor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    bundle.getParcelable(CONTRIBUTORS_REQUEST_KEY, ContributorsDTO::class.java)
-                } else {
-                    ContributorsDTO(
-                        27,
-                        "Daft Punk",
-                        "https://e-cdns-images.dzcdn.net/images/artist/f2bc007e9133c946ac3c3907ddc5d2ea/500x500-000000-80-0-0.jpg"
+            if (binding.miniPlayerLayout.root.currentState == binding.miniPlayerLayout.root.endState) {
+                mainActivityViewModel.currentTrack.value?.let {
+                    showArtistsBottomSheetFragment(
+                        it.contributors
                     )
                 }
-                contributor?.let { it1 -> openArtistProfile(it1) }
-                binding.miniPlayerLayout.root.transitionToStart()
-            }
-            bottomSheetFragment.show(supportFragmentManager, bottomSheetFragment.tag)
-        }
-
-        mainActivityViewModel.track.observe(this) { track ->
-            if (track != null) {
-                changeTrack(track)
-                binding.miniPlayerLayout.buttonLike.isSelected =
-                    userFav.value!!.contains(track.toTrackVO())
-            }
-
-            binding.miniPlayerLayout.currentTrackTrackName.isSelected =
-                binding.miniPlayerLayout.currentTrackTrackName.width >= 140
-
-            binding.miniPlayerLayout.currentTrackExplicitContentIcon.visibility =
-                if (track?.explicitLyrics == true)
-                    View.VISIBLE
-                else
-                    View.GONE
-        }
-
-        mainActivityViewModel.isPlaying.observe(this) { isPlaying ->
-            binding.miniPlayerLayout.currentTrackPlayPauseIcon.isSelected = isPlaying
-            val controller = controllerFuture.get() as? MediaController
-            if (controller != null) {
-                if (isPlaying)
-                    controller.play()
-                else
-                    controller.pause()
             }
         }
 
-        mainActivityViewModel.currentPlaylist.observe(this) { trackList ->
-            val title = mainActivityViewModel.currentPlaylist.value?.title
-            binding.miniPlayerLayout.playlistName.text = title
+        binding.miniPlayerLayout.currentTrackPlayPauseIcon.setOnClickListener {
+            mainActivityViewModel.changePlayPauseState()
         }
+    }
 
-        mainActivityViewModel.currentPosition.observe(this) { pos ->
-            val list = mainActivityViewModel.currentPlaylist.value?.list
-            list?.let {
-                val track = list[pos]
-                CoroutineScope(Dispatchers.IO).launch {
-                    if (track !is TrackVO)
-                        return@launch
-                    mainActivityViewModel.playTrack(track.id)
-                    val mediaItem = MediaItem.Builder()
-                        .setMediaId("media-1")
-                        .setUri(track.preview.toUri())
-                        .setMediaMetadata(
-                            MediaMetadata.Builder()
-                                .setArtist(track.artist.name)
-                                .setTitle(track.title)
-                                .setArtworkUri(track.album?.picture?.toUri())
-                                .build()
-                        ).build()
-
-
-                    val controller = controllerFuture.get() as? MediaController
-
-
-                    withContext(Dispatchers.Main) {
-                        controller?.let {
-                            it.setMediaItem(mediaItem)
-                            it.prepare()
-                            it.play()
-
-                        }
-                    }
-                }
+    private fun showArtistsBottomSheetFragment(artists: List<ContributorsVO>) {
+        val bottomSheetFragment: ArtistsBottomSheetFragment =
+            ArtistsBottomSheetFragment.newInstance(artists)
+        supportFragmentManager.setFragmentResultListener(
+            CONTRIBUTORS_CHOOSE_KEY,
+            this
+        ) { key, bundle ->
+            val contributor = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                bundle.getParcelable(CONTRIBUTORS_REQUEST_KEY, ContributorsDTO::class.java)
+            } else {
+                ContributorsDTO(
+                    27,
+                    "Daft Punk",
+                    "https://e-cdns-images.dzcdn.net/images/artist/f2bc007e9133c946ac3c3907ddc5d2ea/500x500-000000-80-0-0.jpg"
+                )
             }
+            contributor?.let { it1 -> openArtistProfile(it1) }
+            binding.miniPlayerLayout.root.transitionToStart()
         }
+        bottomSheetFragment.show(supportFragmentManager, bottomSheetFragment.tag)
     }
 
     override fun onStart() {
         super.onStart()
-        binding.miniPlayerLayout.currentTrackPlayPauseIcon.setOnClickListener {
-            mainActivityViewModel.playPause()
-        }
     }
 
-    override fun onStop() {
-        super.onStop()
-        MediaController.releaseFuture(controllerFuture)
-        progressBarUpdateJob?.cancel()
-
-    }
-
-    override fun onResume() {
-        super.onResume()
-        initPlayer()
-    }
-
-    fun hidePlayer(){
+    fun hidePlayer() {
         binding.miniPlayerLayout.root.visibility = View.GONE
     }
 
-    private fun initPlayer() {
-        controllerFuture.addListener({
-            val controller = controllerFuture.get() as? MediaController
-            controller?.let {
-                it.addListener(object : Player.Listener {
-                    override fun onPlaybackStateChanged(state: Int) {
-                        if (state == Player.STATE_ENDED) {
-                            mainActivityViewModel.autoNextPosition()
-                        }
-                    }
-                })
-            }
-        }, MoreExecutors.directExecutor())
-    }
-
-    private fun changeTrack(currentTrackVO: CurrentTrackVO) {
-        binding.miniPlayerLayout.currentTrackTrackName.text = currentTrackVO.title
-
-        binding.miniPlayerLayout.currentTrackArtistName.text =
-            currentTrackVO.contributors.joinToString(separator = ", ") { it.name }
-        Glide
-            .with(binding.miniPlayerLayout.root)
-            .load(currentTrackVO.album.picture)
-            .override(300)
-            .dontTransform()
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
-            .transform(RoundedCornersTransformation(20))
-            .into(binding.miniPlayerLayout.currentTrackTrackImage)
-
-
-    }
-
-    private fun startUpdatingProgressBar() {
-        progressBarUpdateJob?.cancel()
-        progressBarUpdateJob = CoroutineScope(Dispatchers.Main).launch {
-            val controller = controllerFuture.get() as? MediaController
-            while (isActive) {
-                val currentPosition = controller?.currentPosition ?: 0
-                val duration = controller?.duration ?: 1
-                val progress = if (duration > 0) (currentPosition * 100 / duration).toInt() else 0
-                withContext(Dispatchers.Main) {
-                    binding.miniPlayerLayout.trackProgressBar.progress = progress
-                    binding.miniPlayerLayout.fullscreenCurrentPosition.text = formatTime(currentPosition)
-                }
-                delay(1000)
-            }
-        }
-    }
-
-    fun openArtistProfile(contributor: ContributorsDTO) {
-        val navController = findNavController(R.id.fragmentContainer)
+    private fun openArtistProfile(contributor: ContributorsDTO) {
+        val navController = findNavController(R.id.container)
         val action = R.id.action_accountFragment_self
         val bundle = bundleOf("id" to contributor.id)
         navController.navigate(action, bundle)
     }
 
-    private fun formatTime(millis: Long): String {
-        val seconds = (millis / 1000) % 60
-        val minutes = (millis / 1000) / 60
-        return String.format("%d:%02d", minutes, seconds)
+    override fun onBackPressed() {
+        if (binding.miniPlayerLayout.root.currentState == binding.miniPlayerLayout.root.endState) {
+            binding.miniPlayerLayout.root.transitionToStart()
+        } else {
+            super.onBackPressed()
+        }
+    }
+
+    override fun onDestroy() {
+        (mediaController as AudioPlayerService).onDestroy()
+        super.onDestroy()
+    }
+
+    fun startNewTrackList(trackList: TrackListVO, position: Int) {
+        mainActivityViewModel.setPlayList(trackList, position)
     }
 }
 
-fun CurrentTrackVO.toTrackVO(): TrackVO {
-    return TrackVO(
-        id = this.id,
-        title = this.title,
-        explicitLyrics = this.explicitLyrics,
-        preview = this.preview,
-        artist = ArtistVO(
-            id = this.contributors[0].id,
-            name = this.contributors[0].name,
-            share = null,
-            picture = this.contributors[0].picture
-        ),
-        album = this.album,
-        position = null
-    )
+private fun Boolean.toVisibility(): Int = when(this) {
+    true -> View.VISIBLE
+    false -> View.GONE
 }

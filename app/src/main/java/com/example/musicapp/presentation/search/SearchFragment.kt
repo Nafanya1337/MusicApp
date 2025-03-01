@@ -22,10 +22,11 @@ import com.example.musicapp.databinding.FragmentSearchBinding
 import com.example.musicapp.domain.models.tracks.TrackListVO
 import com.example.musicapp.domain.models.search.SearchRequestVO
 import com.example.musicapp.domain.models.search.StatusClassVO
+import com.example.musicapp.presentation.adapter.DisplayMode
 import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SearchFragment : Fragment(), SearchHistoryAdapter.Clickable, ListTrackAdapter.Clickable {
+class SearchFragment : Fragment(), SearchHistoryAdapter.Clickable, ListTrackAdapter.TrackClickable {
 
     private lateinit var binding: FragmentSearchBinding
 
@@ -63,7 +64,10 @@ class SearchFragment : Fragment(), SearchHistoryAdapter.Clickable, ListTrackAdap
 
         binding.recyclerView.addItemDecoration(VerticalSpaceItemDecoration(spacingInPixels))
 
-        adapter = ListTrackAdapter(title = "Search", this)
+        adapter = ListTrackAdapter(
+            displayMode = DisplayMode.TRACK_LIST,
+            trackClickableImpl = this
+        )
 
         searchViewModel.status.observe(viewLifecycleOwner) {
             binding.searchPb.visibility = View.GONE

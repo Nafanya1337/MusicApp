@@ -9,12 +9,15 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.musicapp.data.remote.models.tracks.ContributorsDTO
 import com.example.musicapp.data.utils.ToDomainUtil.toData
 import com.example.musicapp.data.utils.ToDomainUtil.toDomain
 import com.example.musicapp.databinding.FragmentArtistsBottomSheetBinding
 import com.example.musicapp.domain.models.tracks.ContributorsVO
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.divider.MaterialDividerItemDecoration
 
 const val CONTRIBUTORS_KEY = "Contributors"
 const val CONTRIBUTORS_CHOOSE_KEY = "Contributors_bottom_sheet"
@@ -49,6 +52,15 @@ class ArtistsBottomSheetFragment : BottomSheetDialogFragment(), ArtistsAdapter.C
             CONTRIBUTORS_KEY, ContributorsDTO::class.java)
         val list = contributors ?: emptyList<ContributorsDTO>()
         binding.artistsRecycleView.adapter = ArtistsAdapter(artists = list.map { it.toDomain() }, clickable = this)
+
+        val itemDivider = MaterialDividerItemDecoration(
+            binding.artistsRecycleView.context,
+            LinearLayoutManager.VERTICAL
+        )
+
+        itemDivider.isLastItemDecorated = false
+
+        binding.artistsRecycleView.addItemDecoration(itemDivider)
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

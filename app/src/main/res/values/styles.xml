@@ -55,7 +55,7 @@
         <item name="android:textColor">@color/white</item>
         <item name="fontFamily">@font/sf_pro_display_regular</item>
     </style>
-    
+
     <style name="Songname_Card">
         <item name="android:layout_width">180dp</item>
         <item name="android:layout_height">20dp</item>
@@ -116,8 +116,9 @@
     <style name="FullScreenPlayerArtistName">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textSize">@dimen/_20sp_text_size</item>
+
         <item name="android:letterSpacing">0.1</item>
+        <item name="android:textSize">20sp</item>
         <item name="fontFamily">@font/sf_pro_display_regular</item>
     </style>
 
@@ -127,6 +128,11 @@
         <item name="android:textSize">@dimen/_24sp_text_size</item>
         <item name="android:letterSpacing">0.1</item>
         <item name="fontFamily">@font/sf_pro_display_medium</item>
+    </style>
+
+    <style name="Widget.Theme.MusicApp.ButtonBar.Fullscreen" parent="">
+        <item name="android:background">@color/black_overlay</item>
+        <item name="android:buttonBarStyle">?android:attr/buttonBarStyle</item>
     </style>
 
 </resources>
