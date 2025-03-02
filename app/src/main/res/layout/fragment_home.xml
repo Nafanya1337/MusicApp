@@ -52,7 +52,8 @@
             android:layout_width="match_parent"
             android:paddingHorizontal="10dp"
             android:clipToPadding="false"
-            android:layout_height="170dp"
+            android:layout_height="0dp"
+            android:maxHeight="200dp"
             android:layout_marginTop="10dp"
             android:orientation="horizontal"
             app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
@@ -75,9 +76,8 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recommendationsRecyclerView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginTop="10dp"
-            android:minHeight="150dp"
             android:paddingHorizontal="10dp"
             android:clipToPadding="false"
             android:orientation="horizontal"
@@ -89,22 +89,22 @@
         <ProgressBar
             android:id="@+id/chartProgressBar"
             style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/chartsRecyclerView"
-            app:layout_constraintEnd_toEndOf="@+id/chartsRecyclerView"
-            app:layout_constraintStart_toStartOf="@+id/chartsRecyclerView"
-            app:layout_constraintTop_toTopOf="@+id/chartsRecyclerView" />
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="15dp"
+            app:layout_constraintBottom_toBottomOf="@+id/chartsTextView"
+            app:layout_constraintStart_toEndOf="@+id/chartsTextView"
+            app:layout_constraintTop_toTopOf="@+id/guideline_Header" />
 
         <ProgressBar
             android:id="@+id/radioProgrssBar"
             style="?android:attr/progressBarStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/recommendationsRecyclerView"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/recommendationsRecyclerView"
-            app:layout_constraintTop_toTopOf="@+id/recommendationsRecyclerView" />
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="15dp"
+            app:layout_constraintBottom_toBottomOf="@+id/recommendationsTextView"
+            app:layout_constraintStart_toEndOf="@+id/recommendationsTextView"
+            app:layout_constraintTop_toTopOf="@+id/recommendationsTextView" />
 
         <Space
             android:layout_width="match_parent"

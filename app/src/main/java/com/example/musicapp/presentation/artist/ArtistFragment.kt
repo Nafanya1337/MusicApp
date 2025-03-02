@@ -5,9 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
@@ -24,7 +21,6 @@ import com.example.musicapp.presentation.utils.DiffUtilCallback
 import com.example.musicapp.presentation.utils.SpaceItemDecorationUtil
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.properties.Delegates
-
 
 class ArtistFragment : Fragment(), ListTrackAdapter.TrackClickable, ListTrackAdapter.PlaylistCardClickable {
 
@@ -65,7 +61,7 @@ class ArtistFragment : Fragment(), ListTrackAdapter.TrackClickable, ListTrackAda
         artist_id = args.id
         initArtistCard(id = artist_id)
 
-        binding.artistAlbumsRecyclerView.addItemDecoration(SpaceItemDecorationUtil(0, 10))
+        binding.artistAlbumsRecyclerView.addItemDecoration(SpaceItemDecorationUtil(0, 10, 1))
 
         binding.topTracksRecyclerView.adapter = ListTrackAdapter(displayMode = DisplayMode.TRACK_LIST , trackClickableImpl = this)
 
@@ -75,6 +71,7 @@ class ArtistFragment : Fragment(), ListTrackAdapter.TrackClickable, ListTrackAda
         artistFragmentViewModel.artist.observe(viewLifecycleOwner) { artist ->
             binding.artistName.text = artist.name
             Glide.with(binding.artistImage).load(artist.picture).into(binding.artistImage)
+            binding.artistFans.text = fansToStringView(artist.fans)
         }
 
         artistFragmentViewModel.tracks.observe(viewLifecycleOwner) {tracks ->
@@ -107,7 +104,7 @@ class ArtistFragment : Fragment(), ListTrackAdapter.TrackClickable, ListTrackAda
         artistFragmentViewModel.getArtistAlbums(id = id)
     }
 
-
+    private fun fansToStringView(fans: Int): String = "%,d fans".format(fans).replace(',', ' ')
 
     override fun onItemClick(trackList: TrackListVO, position: Int) {
         (activity as MainActivity).startNewTrackList(trackList = trackList, position = position)

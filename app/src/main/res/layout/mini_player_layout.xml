@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     app:layoutDescription="@xml/mini_player_layout_scene2"
     tools:ignore="contentDescription">
 
@@ -21,8 +21,8 @@
 
     <ImageView
         android:id="@+id/currentTrack_trackImage"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_marginStart="10dp"
         app:layout_constraintBottom_toBottomOf="@id/playerBackground"
         app:layout_constraintStart_toStartOf="@id/playerBackground"

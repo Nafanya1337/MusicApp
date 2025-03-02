@@ -67,6 +67,8 @@ class AudioPlayerService: MediaSessionService() {
     override fun onDestroy() {
         player.release()
         session.release()
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
         super.onDestroy()
     }
 

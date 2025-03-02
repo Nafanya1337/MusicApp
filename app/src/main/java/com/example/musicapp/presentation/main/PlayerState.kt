@@ -8,4 +8,6 @@ data class PlayerState(
     val duration: Long = 29000,
     val queue: List<MediaItem> = emptyList(),
     val isLoading: Boolean = false,
+    val hasNext: Boolean = true,
+    val hasPrevious: Boolean = true
 )

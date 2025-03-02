@@ -43,6 +43,6 @@ data class ContributorsDTO(
     val id: Long,
     @SerializedName("name")
     val name: String,
-    @SerializedName("picture_big")
+    @SerializedName("picture_small")
     val picture: String
 ) : Parcelable

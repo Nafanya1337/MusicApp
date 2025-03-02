@@ -47,7 +47,7 @@ class MusicApp : Application() {
                 ViewModelModule))
         }
         val sharedPreferences = getSharedPreferences(THEME_PREFERENCES, Context.MODE_PRIVATE)
-        val isDarkThemeEnabled = sharedPreferences.getBoolean(DARK_THEME_ENABLED_KEY, false)
+        val isDarkThemeEnabled = sharedPreferences.getBoolean(DARK_THEME_ENABLED_KEY, true)
 
         applyTheme(isDarkThemeEnabled)
         FirebaseApp.initializeApp(this)

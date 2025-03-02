@@ -65,6 +65,18 @@ class PlayerManager(
         }
     }
 
+    fun setPlaybackPosition(positionMs: Long) {
+        mediaController?.seekTo(positionMs)
+    }
+
+    fun previous() {
+        mediaController?.seekToPrevious()
+    }
+
+    fun next() {
+        mediaController?.seekToNext()
+    }
+
     fun pause() {
         mediaController?.pause()
     }
@@ -75,9 +87,11 @@ class PlayerManager(
 
     fun release() {
         mediaControllerFuture?.let { MediaController.releaseFuture(it) }
-        mediaController = null
+        mediaController?.stop()
+
         playbackUpdateJob?.cancel()
         playbackUpdateJob = null
+        mediaController = null
     }
 
     fun setPlaylist(
@@ -116,7 +130,11 @@ class PlayerManager(
             override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
                 if (mediaItem != null) {
                     _playerState.update {
-                        it.copy(mediaItem = mediaItem)
+                        it.copy(
+                            mediaItem = mediaItem,
+                            hasNext = mediaController!!.hasNextMediaItem(),
+                            hasPrevious = mediaController!!.hasPreviousMediaItem()
+                        )
                     }
                 }
             }

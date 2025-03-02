@@ -81,7 +81,7 @@ object ToDomainUtil {
         return AlbumInfoVO(
             id = this.id,
             title = this.title,
-            picture = this.picture
+            picture = this.picture ?: ""
         )
     }
 
@@ -150,7 +150,8 @@ object ToDomainUtil {
             id = this.id,
             name = this.name,
             share = this.share,
-            picture = this.picture
+            picture = this.picture ?: "",
+            fans = this.fans
         )
     }
 
@@ -164,7 +165,7 @@ object ToDomainUtil {
             recordType = this.recordType,
             explicitLyrics = this.explicitLyrics,
             tracklist = this.tracklist,
-            contributors = this?.contributors ?: emptyList()
+            contributors = this.contributors ?: emptyList()
         )
     }
 }

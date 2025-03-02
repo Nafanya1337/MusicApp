@@ -34,7 +34,6 @@ class PlaylistRepositoryImpl(
             try {
                 musicApi.radio().body()!!.toDomain()
             } catch (e: Exception) {
-                Log.e("boobs", e.message.toString())
                 RadioResponseVO(emptyList())
             }
         }

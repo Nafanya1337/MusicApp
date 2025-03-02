@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MediaMetadata
 import androidx.media3.common.util.UnstableApi
@@ -111,6 +110,10 @@ class MainActivityViewModel(
         }
     }
 
+    fun setPlaybackPosition(position: Int) {
+        playerManager.setPlaybackPosition((position * 1000).toLong())
+    }
+
     fun initUser() {
         viewModelScope.launch(Dispatchers.IO) {
             getCurrentUserUseCase.execute { data ->
@@ -130,6 +133,14 @@ class MainActivityViewModel(
 
     private fun setCurrentTrackList(trackList: TrackListVO) {
         _trackList.value = trackList
+    }
+
+    fun next() {
+        playerManager.next()
+    }
+
+    fun previous() {
+        playerManager.previous()
     }
 
     fun CurrentTrackVO.toTrackVO(): TrackVO {

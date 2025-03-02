@@ -7,7 +7,7 @@ data class TrackVO(
     val title: String = "",
     val explicitLyrics: Boolean = false,
     val preview: String = "",
-    val artist: ArtistVO = ArtistVO(0,"", null, null),
+    val artist: ArtistVO = ArtistVO(),
     var album: AlbumInfoVO? = null,
     val position: Int? = null,
     val duration: Int

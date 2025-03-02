@@ -12,5 +12,7 @@ data class ArtistDTO(
     @SerializedName("share")
     val share: URL?,
     @SerializedName("picture_xl")
-    val picture: String?
+    val picture: String,
+    @SerializedName("nb_fan")
+    val fans: Int
 )

@@ -1,23 +1,20 @@
 package com.example.musicapp.presentation.playlist
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
-import com.example.musicapp.presentation.adapter.ListTrackAdapter
-import com.example.musicapp.presentation.main.MainActivity
+import androidx.fragment.app.Fragment
 import com.example.musicapp.data.remote.models.home.RadioDTO
 import com.example.musicapp.data.utils.ToDomainUtil.toDomain
 import com.example.musicapp.databinding.FragmentPlaylistBinding
+import com.example.musicapp.domain.models.home.RadioVO
 import com.example.musicapp.domain.models.tracks.AlbumInfoVO
 import com.example.musicapp.domain.models.tracks.PlaylistType
 import com.example.musicapp.domain.models.tracks.TrackListVO
-import com.example.musicapp.domain.models.home.RadioVO
 import com.example.musicapp.presentation.adapter.DisplayMode
+import com.example.musicapp.presentation.adapter.ListTrackAdapter
+import com.example.musicapp.presentation.main.MainActivity
 import com.example.musicapp.presentation.utils.SpaceItemDecorationUtil
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -68,7 +65,7 @@ class PlaylistFragment : Fragment(), ListTrackAdapter.TrackClickable {
 
         binding.playlistRecyclerView.adapter = adapter
 
-        binding.playlistRecyclerView.addItemDecoration(SpaceItemDecorationUtil(10, 0))
+        binding.playlistRecyclerView.addItemDecoration(SpaceItemDecorationUtil(15, 0))
 
         playlistViewModel.trackList.observe(viewLifecycleOwner) { tracks ->
             adapter?.list = listOf(currentPlaylist) + tracks.list

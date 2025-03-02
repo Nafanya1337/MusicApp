@@ -6,9 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -100,8 +97,8 @@ class HomeFragment : Fragment(), ListTrackAdapter.TrackClickable,
                 binding.radioProgrssBar.visibility = View.GONE
         }
 
-        binding.chartsRecyclerView.addItemDecoration(SpaceItemDecorationUtil(5, 10, 3))
-        binding.recommendationsRecyclerView.addItemDecoration(SpaceItemDecorationUtil(20, 10, 2))
+        binding.chartsRecyclerView.addItemDecoration(SpaceItemDecorationUtil(15, 20, 3))
+        binding.recommendationsRecyclerView.addItemDecoration(SpaceItemDecorationUtil(15, 20, 2))
 
         binding.recommendationsRecyclerView.layoutManager =
             GridLayoutManager(activity, 2, GridLayoutManager.HORIZONTAL, false)
